@@ -1,7 +1,7 @@
 const { Pool } = require("pg");
 const PASSWORD = process.env.PASSWORD;
 const USERNAME = process.env.USERNAME;
-const DATABASE_NAME = "avagrows";
+const DATABASE_NAME = "inventory";
 const CONNECTION_STRING = `postgresql://${USERNAME}:${PASSWORD}@localhost:5432/${DATABASE_NAME}`;
 
 const config = process.env.DATABASE_URL
