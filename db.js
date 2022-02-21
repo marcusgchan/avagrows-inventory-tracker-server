@@ -1,9 +1,9 @@
 const { Pool } = require("pg");
 const PASSWORD = process.env.PASSWORD;
 const USERNAME = process.env.USERNAME;
-const DATABASE_NAME = "inventory";
-const CONNECTION_STRING = `postgresql://${USERNAME}:${PASSWORD}@localhost:5432/${DATABASE_NAME}`;
-
+const DATABASE_NAME = "users";
+const CONNECTION_STRING = `postgresql://postgres:${PASSWORD}@localhost:5432/${DATABASE_NAME}`;
+console.log(CONNECTION_STRING)
 const config = process.env.DATABASE_URL
   ? {
       connectionString: process.env.DATABASE_URL,

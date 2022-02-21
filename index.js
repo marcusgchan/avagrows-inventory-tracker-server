@@ -7,7 +7,8 @@ const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("build"));
+app.use(express.urlencoded({ extended: false}))
+app.use(express.static("public"));
 
 app.use("/api/users", usersRouter);
 
