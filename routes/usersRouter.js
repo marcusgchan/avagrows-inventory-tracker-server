@@ -27,10 +27,10 @@ usersRouter.post("/", async(req, res) => {
     if (data.rows.length > 0) {
         
         const correctPassword = await bcrypt.compare(password, data.rows[0].password);
-    
+        
 
       if(correctPassword){
-      res.status(400).json({ msg: "login successful" });
+      res.status(200).json({ msg: "login successful" });
       return;
     } else {
         res.status(400).json({ msg: "password did not match" });
