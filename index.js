@@ -38,7 +38,7 @@ app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/logout", logoutRouter);
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/build/index.html"));
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
