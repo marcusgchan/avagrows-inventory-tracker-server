@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const registerRouter = require("./routes/registerRouter");
 const loginRouter = require("./routes/loginRouter");
@@ -19,7 +20,7 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static("build"));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -36,5 +37,8 @@ app.use("/api/register", registerRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/logout", logoutRouter);
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/build/index.html"));
+});
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

@@ -10,8 +10,6 @@ registerRouter.post("/", async (req, res) => {
     res.status(400).json({ msg: "Bad request" });
   }
 
-  // Verify email format
-
   const hashedPassword = await bcrypt.hash(password, 10);
 
   pool
