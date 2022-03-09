@@ -1,5 +1,5 @@
 const partsRouter = require("express").Router();
-const pool = require("./db");
+const pool = require("../db");
 
 partsRouter.get("/", (req, res) => {});
 
