@@ -16,7 +16,7 @@ module.exports = function (passport) {
             .compare(password, user.password)
             .then((isCorrectPassword) => {
               return isCorrectPassword
-                ? done(null, user)
+                ? done(null, user, { message: "Correct password" })
                 : done(null, false, { message: "Password is incorrect" });
             })
             .catch((err) => {
