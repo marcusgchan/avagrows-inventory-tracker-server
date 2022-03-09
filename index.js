@@ -6,6 +6,7 @@ const registerRouter = require("./routes/registerRouter");
 const loginRouter = require("./routes/loginRouter");
 const logoutRouter = require("./routes/logoutRouter");
 const userRouter = require("./routes/userRouter");
+const partsRouter = require("./routes/partsRouter");
 const app = express();
 const PORT = process.env.PORT;
 const passport = require("passport");
@@ -37,6 +38,7 @@ app.use("/api/register", registerRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/logout", logoutRouter);
+app.use("/api/parts", partsRouter);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
