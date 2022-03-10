@@ -1,22 +1,24 @@
 {
   "files": {
-    "main.css": "/static/css/main.e1c0160a.css",
-    "main.js": "/static/js/main.3f67dcd2.js",
+    "main.css": "/static/css/main.34da6e8d.css",
+    "main.js": "/static/js/main.9f86650a.js",
     "static/media/logo.PNG": "/static/media/logo.e5342166bcc14d63ee1d.PNG",
     "static/media/users.svg": "/static/media/users.093df646577cdc78f45677a93ca6321b.svg",
     "static/media/package.svg": "/static/media/package.68cf090d23bd641667a453d1d61ff3cd.svg",
+    "static/media/trash.svg": "/static/media/trash.a798a0bc183bd5b44f30b74d3042abcc.svg",
     "static/media/help-circle.svg": "/static/media/help-circle.21dda8a982f938a197e4eaa11d85e91f.svg",
+    "static/media/edit.svg": "/static/media/edit.5c5aeb4f509bb7a3c6c4252dbaa49162.svg",
     "index.html": "/index.html",
     "static/media/bell.svg": "/static/media/bell.3dce1f7e1eee5b2101f27096a3508f40.svg",
     "static/media/book-open.svg": "/static/media/book-open.306c2a286abe00784871c0603ff527fb.svg",
     "static/media/grid.svg": "/static/media/grid.825a33395d2ccf819c5c5666cc76ce4a.svg",
     "static/media/hamburger-button.svg": "/static/media/hamburger-button.0969c943fd1d42ecc86f73abde3bb014.svg",
     "static/media/arrowDown.svg": "/static/media/arrowDown.f2c05c1615b11e526e1c4a3e9c9f0949.svg",
-    "main.e1c0160a.css.map": "/static/css/main.e1c0160a.css.map",
-    "main.3f67dcd2.js.map": "/static/js/main.3f67dcd2.js.map"
+    "main.34da6e8d.css.map": "/static/css/main.34da6e8d.css.map",
+    "main.9f86650a.js.map": "/static/js/main.9f86650a.js.map"
   },
   "entrypoints": [
-    "static/css/main.e1c0160a.css",
-    "static/js/main.3f67dcd2.js"
+    "static/css/main.34da6e8d.css",
+    "static/js/main.9f86650a.js"
   ]
 }
