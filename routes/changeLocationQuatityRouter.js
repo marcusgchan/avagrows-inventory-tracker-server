@@ -2,7 +2,7 @@ const changeLocationQuatityRouter = require("express").Router();
 const pool = require("../db");
 
 changeLocationQuatityRouter.post("/", (req, res) => {
-    var internal_part_number=req.body;
+    var internal_part_number;
     var oldLocation;
     var oldStatus;
     var oldQuantity;
