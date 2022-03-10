@@ -1,8 +1,8 @@
 const { Pool } = require("pg");
 const PASSWORD = process.env.PASSWORD;
 const USERNAME = process.env.USERNAME;
-const DATABASE_NAME = "avagrows";
-const CONNECTION_STRING = `postgresql://${USERNAME}:${PASSWORD}@localhost:5432/${DATABASE_NAME}`;
+const DATABASE_NAME = "ava-inventory-local";
+const CONNECTION_STRING = `postgresql://postgres:${PASSWORD}@localhost:5432/${DATABASE_NAME}`;
 
 const config = process.env.DATABASE_URL
   ? {
