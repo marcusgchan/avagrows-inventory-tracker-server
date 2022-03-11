@@ -10,6 +10,7 @@ const partsRouter = require("./routes/partsRouter");
 const locationRouter = require("./routes/locationRouter");
 const statusRouter = require("./routes/statusRouter");
 const categoryRouter = require("./routes/categoryRouter");
+const changeLocationQuantityRouter = require("./routes/changeLocationQuatityRouter");
 const app = express();
 const PORT = process.env.PORT;
 const passport = require("passport");
