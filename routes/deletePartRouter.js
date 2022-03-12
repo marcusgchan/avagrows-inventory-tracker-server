@@ -9,7 +9,8 @@ deletePartRouter.post("/", (req, res) => {
     var partsQuantityQuery = `SELECT * FROM part_quantity WHERE internal_part_number = ${internal_part_number}, status_id = ${status_id}, location_id = ${location_id};`
     var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = ${internal_part_number};`
     var resultsForTotalQuantity
-    var quantity;
+    var quantity
+    var totalQuantity
 
     pool.query(partsQuantityQuery,(error,result)=> {
         if(error){
@@ -37,7 +38,7 @@ deletePartRouter.post("/", (req, res) => {
         }
     })
     totalQuantity=resultsForTotalQuantity-quantity;
-    var addNewPartTotalQuantity = `UPDATE parts SET total_quantity =${totalQuantity} WHERE internal_part_number = ${internal_part_number}`
+    var addNewPartTotalQuantity = `UPDATE parts SET total_quantity = ${totalQuantity} WHERE internal_part_number = ${internal_part_number}`
     pool.query(addNewPartTotalQuantity,(error,result)=> {
         if(error){
             console.log(error);
