@@ -2,11 +2,11 @@ const addPartQuantityRouter = require("express").Router();
 const pool = require("../db");
 
 addPartQuantityRouter.post("/", (req, res) => {
-    var internal_part_number /* = req.body */
-    var location_id /* = req.body */
-    var status_id /* = req.body */
-    var quantity /* = req.body */
-    var note /* = req.body */
+    var internal_part_number  = req.body.internal_part_number;
+    var location_id=req.body.location_id
+    var status_id= req.body.status_id;
+    var quantity =req.body.quantity
+    var note = req.body.note;
     var results
     var resultsForEntry
     var resultsForTotalQuantity
@@ -25,6 +25,7 @@ addPartQuantityRouter.post("/", (req, res) => {
             
         }
         resultsForEntry = result.rows;
+        resultsForTotalQuantity=result.rows[0].total_quantity;
     })
     if(resultsForEntry.length<1){
         return;
@@ -48,14 +49,7 @@ addPartQuantityRouter.post("/", (req, res) => {
                 console.log('Add Done')
             }
         })
-        pool.query(checkForEntry,(error,result)=> {
-            if(error){
-                console.log(error);
-                return;
-            } else {
-                resultsForTotalQuantity=result.rows[0].total_quantity;
-            }
-        })
+       
         totalQuantity=resultsForTotalQuantity+quantity;
         var addNewPartTotalQuantity = `UPDATE parts SET total_quantity =${totalQuantity} WHERE internal_part_number = ${internal_part_number}`
         pool.query(addNewPartTotalQuantity,(error,result)=> {
