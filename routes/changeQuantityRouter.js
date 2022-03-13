@@ -1,7 +1,7 @@
 const changeQuantityRouter = require("express").Router();
 const pool = require("../db");
 
-changeQuantityRouter.post("/", (req, res) => {
+changeQuantityRouter.post("/", async(req, res) => {
     var old_quantity /* place old quantity in a hidden input for access */
     var new_quantity /* = req.body */
     var total_quantity /* = req.body */
@@ -12,35 +12,22 @@ changeQuantityRouter.post("/", (req, res) => {
     var changeTotalQuantityTableQuery = `UPDATE parts SET total_quantity = ${total_quantity + new_quantity - old_quantity} WHERE internal_part_number =${internal_part_number};`;
     var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = ${internal_part_number};`
     
-    if (new_quantity >= 0) {
-        pool.query(changeQuantityTableQuery,(error,result)=> {
-            if(error){
-                console.log(error);
-                return;
-            } else {
-                console.log('Change Quantity Done')
-            }
-        })
-        pool.query(checkForEntry,(error,result)=> {
-            if(error){
-                console.log(error);
-                return;
-            } else {
-                total_quantity=result.rows[0].total_quantity;
-            }
-        })
+    try{
     
-        pool.query(changeTotalQuantityTableQuery,(error,result)=> {
-            if(error){
-                console.log(error);
-                return;
-            } else {
-                console.log('Change Total Quantity Done')
-            }
-        })
-    } else {
-        console.log('The New Quantity is Invalid')
+        await pool.query(changeQuantityTableQuery);
+        const result=await pool.query(checkForEntry);
+        total_quantity=result.rows[0].total_quantity;
+        await pool.query(changeTotalQuantityTableQuery)
+
     }
+    catch(e){
+        console.log(e);
+                return;
+    }
+        
+    
+        
+     
 });
 
 module.exports = changeQuantityRouter;

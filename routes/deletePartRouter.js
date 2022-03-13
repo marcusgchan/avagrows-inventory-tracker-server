@@ -1,7 +1,7 @@
 const deletePartRouter = require("express").Router();
 const pool = require("../db");
 
-deletePartRouter.post("/", (req, res) => {
+deletePartRouter.post("/", async (req, res) => {
     var internal_part_number /* = req.body */
     var location_id;
     var status_id;
@@ -11,42 +11,28 @@ deletePartRouter.post("/", (req, res) => {
     var resultsForTotalQuantity
     var quantity
     var totalQuantity
-
-    pool.query(partsQuantityQuery,(error,result)=> {
-        if(error){
-            console.log(error);
-            return;
-        } else {
+try{
+    const result=await pool.query(partsQuantityQuery)
+         
             quantity=result.rows[0].quantity;
-        }
-    })
-    
-    pool.query(deleteFromAllTables,(error,result)=> {
-        if(error){
-            console.log(error);
-            return;
-        } else {
-            console.log('Delete Done')
-        }
-    })
-    pool.query(checkForEntry,(error,result)=> {
-        if(error){
-            console.log(error);
-            return;
-        } else {
-            resultsForTotalQuantity=result.rows[0].total_quantity;
-        }
-    })
+        
+    await pool.query(deleteFromAllTables)
+
+    const result2=await pool.query(checkForEntry)
+    resultsForTotalQuantity=result2.rows[0].total_quantity;
+
     totalQuantity=resultsForTotalQuantity-quantity;
     var addNewPartTotalQuantity = `UPDATE parts SET total_quantity = ${totalQuantity} WHERE internal_part_number = ${internal_part_number}`
-    pool.query(addNewPartTotalQuantity,(error,result)=> {
-        if(error){
-            console.log(error);
+    await pool.query(addNewPartTotalQuantity);
+
+} catch(e){
+    console.log(e);
             return;
-        } else {
-            console.log('update Done')
-        }
-    })
+}
+    
+    
+    
+    
 });
 
 module.exports = deletePartRouter;

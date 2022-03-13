@@ -16,6 +16,7 @@ addPartQuantityRouter.post("/", async (req, res) => {
     var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = ${internal_part_number};`
     
     
+
     
     try{
     const result=await pool.query (checkForEntry) 
@@ -43,7 +44,7 @@ addPartQuantityRouter.post("/", async (req, res) => {
     }
  catch(e){
     
-        console.log(error);
+        console.log(e);
         return;
 }
 
