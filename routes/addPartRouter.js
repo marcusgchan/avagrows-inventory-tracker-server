@@ -1,7 +1,7 @@
 const addPartQuantityRouter = require("express").Router();
 const pool = require("../db");
 
-addPartQuantityRouter.post("/", (req, res) => {
+addPartQuantityRouter.post("/", async (req, res) => {
     var internal_part_number  = req.body.internal_part_number;
     var location_id=req.body.location_id
     var status_id= req.body.status_id;
@@ -17,53 +17,40 @@ addPartQuantityRouter.post("/", (req, res) => {
     
     
     
-
-    pool.query(checkForEntry,(error,result)=> {
-        if(error){
-            console.log(error);
-            return;
-            
-        }
+    try{
+    const result=await pool.query (checkForEntry) 
         resultsForEntry = result.rows;
         resultsForTotalQuantity=result.rows[0].total_quantity;
-    })
-    if(resultsForEntry.length<1){
+        
+        if(resultsForEntry.length<1){
         return;
     }
         
-    pool.query(checkForDuplicates,(error,result)=> {
-        if(error){
-            console.log(error);
-            return;
-            
-        }
-        results = result.rows;
-    })
-
-    if (results.length == 0) {
-        pool.query(addNewPartQuantity,(error,result)=> {
-            if(error){
-                console.log(error);
-                return;
-            } else {
-                console.log('Add Done')
-            }
-        })
-       
+    const result2= await pool.query(checkForDuplicates)
+        
+        results = result2.rows;
+    
+        if (results.length == 0) {
+        await pool.query(addNewPartQuantity)
+        
         totalQuantity=resultsForTotalQuantity+quantity;
         var addNewPartTotalQuantity = `UPDATE parts SET total_quantity =${totalQuantity} WHERE internal_part_number = ${internal_part_number}`
-        pool.query(addNewPartTotalQuantity,(error,result)=> {
-            if(error){
-                console.log(error);
-                return;
-            } else {
-                console.log('update Done')
-            }
-        })
+        await pool.query(addNewPartTotalQuantity)
 
     } else {
         console.log('This part already exists at this location with this status!')
     }
+    }
+ catch(e){
+    
+        console.log(error);
+        return;
+}
+
+    
+    
+       
+        
 });
 
 module.exports = addPartQuantityRouter;
