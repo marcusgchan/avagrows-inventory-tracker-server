@@ -1,8 +1,8 @@
 const editPartCategoryRouter = require("express").Router();
 const pool = require("../db");
-var new_part_category_id
-var part_id
-var part_category_name
+var new_part_category_id;
+var part_id;
+var part_category_name;
 
 editPartCategoryRouter.post("/", (req, res) => {
   var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_id = ${new_part_category_id}, part_id = '${part_id}', part_category_name = '${part_category_name}' WHERE part_id = ${part_id};`;
