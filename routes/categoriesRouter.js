@@ -2,6 +2,7 @@ const categoryRouter = require("express").Router();
 const pool = require("../db");
 
 categoryRouter.get("/", (req, res) => {
+  //select all parts from part category table
   var categoryTableQuery =
     "SELECT DISTINCT part_category_name FROM part_categories;";
 

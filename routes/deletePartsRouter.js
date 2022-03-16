@@ -1,7 +1,7 @@
 const deletePartsRouter = require("express").Router();
 const pool = require("../db");
 
-var sinternal_part_number;
+var internal_part_number;
 var partsQuantityRows;
 deletePartsRouter.post("/", async (req, res) => {
   try {

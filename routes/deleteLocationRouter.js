@@ -8,11 +8,11 @@ deleteLocationRouter.post("/", async (req, res) => {
   var results;
 
   try {
-    const result = pool.query(checkIfInUse);
+    const result = await pool.query(checkIfInUse);
     results = result.rows;
 
     if (results.length < 1) {
-      pool.query(deleteLocationTableQuery);
+      await pool.query(deleteLocationTableQuery);
     } else {
       console.log("This location is still in use!");
     }

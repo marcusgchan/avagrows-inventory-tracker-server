@@ -3,10 +3,10 @@ const pool = require("../db");
 var part_category_id;
 var part_id;
 var part_category_name;
-
+//add to part category table
 addPartCategoryRouter.post("/", (req, res) => {
   var addPartCategoryTableQuery = `INSERT into locations values(${part_category_id},'${part_id}','${part_category_name}');`;
-
+  //querry to add part category into table
   pool.query(addPartCategoryTableQuery, (error, result) => {
     if (error) {
       return;
