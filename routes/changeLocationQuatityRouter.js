@@ -21,9 +21,9 @@ changeLocationQuatityRouter.post("/", async (req, res) => {
       var results2;
       var results;
 
-      var changeLocationQuatityTableQuery = `UPDATE part_quantity SET quantity =${newOldQuantity} WHERE internal_part_number = ${internal_part_number},status_id = ${oldStatus},location_id = ${oldLocation};`;
-      var changeLocationQuatityTableQuery2 = `UPDATE part_quantity SET quantity =${newNewQuantity} WHERE internal_part_number = ${internal_part_number},status_id = ${newStatus},location_id = ${newLocation};`;
-      var changeLocationQuatityTableQuery3 = `select * from part_quantity WHERE internal_part_number = ${internal_part_number},status_id = ${newStatus},location_id = ${newLocation};`;
+      var changeLocationQuatityTableQuery = `UPDATE part_quantity SET quantity =${newOldQuantity} WHERE internal_part_number = ${internal_part_number} AND status_id = ${oldStatus} AND location_id = ${oldLocation};`;
+      var changeLocationQuatityTableQuery2 = `UPDATE part_quantity SET quantity =${newNewQuantity} WHERE internal_part_number = ${internal_part_number} AND status_id = ${newStatus} AND location_id = ${newLocation};`;
+      var changeLocationQuatityTableQuery3 = `select * from part_quantity WHERE internal_part_number = ${internal_part_number} AND status_id = ${newStatus} AND location_id = ${newLocation};`;
       var changeLocationQuatityTableQuery4 = `insert into part_quantity values ('${internal_part_number}','${newLocation}','${newStatus}',${amountToChange},' ' );`;
 
       const result = await pool.query(changeLocationQuatityTableQuery3);

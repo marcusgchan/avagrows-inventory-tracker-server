@@ -12,7 +12,7 @@ addPartQuantityRouter.post("/", async (req, res) => {
   var resultsForTotalQuantity;
   var totalQuantity;
   var addNewPartQuantity = `INSERT INTO part_quantity values('${internal_part_number}', ${location_id}, ${status_id}, ${quantity}, '${note}';`;
-  var checkForDuplicates = `SELECT * FROM part_quantity WHERE internal_part_number = ${internal_part_number}, status_id = ${status_id}, location_id = ${location_id};`;
+  var checkForDuplicates = `SELECT * FROM part_quantity WHERE internal_part_number = ${internal_part_number} AND status_id = ${status_id} AND location_id = ${location_id};`;
   var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = ${internal_part_number};`;
 
   try {
