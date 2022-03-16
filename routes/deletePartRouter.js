@@ -2,12 +2,11 @@ const deletePartRouter = require("express").Router();
 const pool = require("../db");
 
 deletePartRouter.post("/", async (req, res) => {
-  var internal_part_number; /* = req.body */
-  var location_id;
-  var status_id;
-  var deleteFromAllTables = ` DELETE FROM part_quantity WHERE internal_part_number = ${internal_part_number}, location_id = ${location_id}, status_id = ${status_id};`;
-  var partsQuantityQuery = `SELECT * FROM part_quantity WHERE internal_part_number = ${internal_part_number}, status_id = ${status_id}, location_id = ${location_id};`;
-  var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = ${internal_part_number};`;
+  const { internal_part_number, location_id, status_id } = req.body;
+
+  var deleteFromAllTables = `DELETE FROM part_quantity WHERE internal_part_number = '${internal_part_number}' AND location_id = '${location_id}' AND status_id = '${status_id}'`;
+  var partsQuantityQuery = `SELECT * FROM part_quantity WHERE internal_part_number = '${internal_part_number}' AND status_id = '${status_id}' AND location_id = '${location_id}'`;
+  var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = '${internal_part_number}'`;
   var resultsForTotalQuantity;
   var quantity;
   var totalQuantity;
@@ -19,14 +18,17 @@ deletePartRouter.post("/", async (req, res) => {
     await pool.query(deleteFromAllTables);
 
     const result2 = await pool.query(checkForEntry);
+
     resultsForTotalQuantity = result2.rows[0].total_quantity;
 
     totalQuantity = resultsForTotalQuantity - quantity;
-    var addNewPartTotalQuantity = `UPDATE parts SET total_quantity = ${totalQuantity} WHERE internal_part_number = ${internal_part_number}`;
+    var addNewPartTotalQuantity = `UPDATE parts SET total_quantity = '${totalQuantity}' WHERE internal_part_number = '${internal_part_number}'`;
     await pool.query(addNewPartTotalQuantity);
+
+    res.status(200).end();
   } catch (e) {
     console.log(e);
-    return;
+    res.status(400).json({ msg: "Bad request" });
   }
 });
 
