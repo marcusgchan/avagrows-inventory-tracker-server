@@ -11,12 +11,6 @@ changeQuantityRouter.post("/", async (req, res) => {
     status_id,
   } = req.body;
 
-  // var old_quantity; /* place old quantity in a hidden input for access */
-  // var quantity; /* = req.body */
-  // var total_quantity; /* = req.body */
-  // var internal_part_number; /* = req.body */
-  // var location_id; /* = req.body */
-  // var status_id; /* = req.body */
   //query to update part to new value
   var changeQuantityTableQuery = `UPDATE part_quantity SET quantity = ${quantity} WHERE internal_part_number ='${internal_part_number}' AND location_id =${location_id} AND status_id =${status_id};`;
   //query to update parts table
