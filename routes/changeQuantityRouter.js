@@ -30,9 +30,9 @@ changeQuantityRouter.post("/", async (req, res) => {
 
     // update total quantity in parts table
     await pool.query(changeTotalQuantityTableQuery);
-    res.status(200).end;
+    res.status(200).end();
   } catch (e) {
-    res.status(400).end;
+    res.status(400).end();
     return;
   }
 });

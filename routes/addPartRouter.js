@@ -14,7 +14,6 @@ addPartQuantityRouter.post("/", async (req, res) => {
 
   //query to insert into parts quantity table
   let addNewPartQuantity = `INSERT INTO part_quantity values('${internal_part_number}', '${location_id}', '${status_id}', '${quantity}', '${note}', DEFAULT);`;
-  console.log(addNewPartQuantity);
   //query to check for dublicates in table
   let checkForDuplicates = `SELECT * FROM part_quantity WHERE internal_part_number = '${internal_part_number}' AND status_id = ${status_id} AND location_id = ${location_id};`;
   //query to check parts table for entry
