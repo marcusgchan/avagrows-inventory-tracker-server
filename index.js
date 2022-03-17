@@ -10,7 +10,7 @@ const partsRouter = require("./routes/partsRouter");
 const locationsRouter = require("./routes/locationsRouter");
 const statusesRouter = require("./routes/statusesRouter");
 const categoriesRouter = require("./routes/categoriesRouter");
-const changeLocationQuantityRouter = require("./routes/changeLocationQuatityRouter");
+const moveLocationRouter = require("./routes/moveLocationRouter");
 const deletePartRouter = require("./routes/deletePartRouter");
 const changeQuantityRouter = require("./routes/changeQuantityRouter");
 const app = express();
@@ -48,9 +48,10 @@ app.use("/api/parts", partsRouter);
 app.use("/api/locations", locationsRouter);
 app.use("/api/statuses", statusesRouter);
 app.use("/api/categories", categoriesRouter);
-app.use("/api/changeLocationQuantity", changeLocationQuantityRouter);
 app.use("/api/delete", deletePartRouter);
 app.use("/api/changeQuantity", changeQuantityRouter);
+app.use("/api/moveLocation", moveLocationRouter);
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
