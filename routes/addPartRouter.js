@@ -37,7 +37,6 @@ addPartQuantityRouter.post("/", async (req, res) => {
       await pool.query(addNewPartQuantity);
 
       let updatedQuantity = total_quantity + Number(quantity);
-      console.log(updatedQuantity);
       //update the total quantity in the parts table
       let addNewPartTotalQuantity = `UPDATE parts SET total_quantity = '${updatedQuantity}' WHERE internal_part_number = '${internal_part_number}'`;
       await pool.query(addNewPartTotalQuantity);
