@@ -1,5 +1,8 @@
 const editLocationRouter = require("express").Router();
 const pool = require("../db");
+
+/*  Edits an entry in the locations table with the updated information provided by the user.  */
+
 var old_location_id
 var new_location_id
 var log_id

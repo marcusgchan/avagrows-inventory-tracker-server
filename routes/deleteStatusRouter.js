@@ -1,6 +1,11 @@
 const deleteStatusRouter = require("express").Router();
 const pool = require("../db");
 
+/*  Deletes a status from the statuses table.
+    First checks if the status is attached to any entry in the part quantity table,
+    if a part entry is using the status, then it does not go through.
+    Otherwise, the status is deleted from the table.    */
+
 var status_id;
 var partsQuantityRows;
 deleteStatusRouter.post("/", async (req, res) => {

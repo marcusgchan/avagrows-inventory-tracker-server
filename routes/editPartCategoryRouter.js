@@ -1,5 +1,8 @@
 const editPartCategoryRouter = require("express").Router();
 const pool = require("../db");
+
+/*  Edits an entry in the part category table with the updated information provided by the user.  */
+
 var new_part_category_id;
 var part_id;
 var part_category_name;

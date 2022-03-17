@@ -1,6 +1,8 @@
 const editStatusRouter = require("express").Router();
 const pool = require("../db");
 
+/*  Edits an entry in the statuses table with the updated information provided by the user.  */
+
 var status_id;
 var log_id;
 var status_name;
