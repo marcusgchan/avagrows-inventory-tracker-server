@@ -52,7 +52,7 @@ changeLocationQuantityRouter.post("/", async (req, res) => {
         //updates the new and previous location
         await pool.query(updatePrevLocationQuery);
         await pool.query(updateNewLocationQuery);
-      }
+      } 
     }
   } catch (e) {
     res.status(400).json("Bad request");
