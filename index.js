@@ -16,6 +16,7 @@ const moveLocationRouter = require("./routes/moveLocationRouter");
 const deletePartRouter = require("./routes/deletePartRouter");
 const changeQuantityRouter = require("./routes/changeQuantityRouter");
 const addPartRouter = require("./routes/addPartRouter");
+const queryPartsQuantityRouter = require("./routes/queryPartsQuantityRouter");
 const app = express();
 const PORT = process.env.PORT;
 const passport = require("passport");
@@ -57,7 +58,7 @@ app.use("/api/delete", deletePartRouter);
 app.use("/api/changeQuantity", changeQuantityRouter);
 app.use("/api/moveLocation", moveLocationRouter);
 app.use("/api/addPart", addPartRouter);
-
+app.use("/api/queryPartsQuantityRouter", queryPartsQuantityRouter);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

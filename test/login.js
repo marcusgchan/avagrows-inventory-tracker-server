@@ -1,7 +1,7 @@
 require("dotenv").config();
 const request = require("supertest");
 const app = require("../index");
-
+console.log(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD);
 describe("Login with correct credentials", () => {
   it("responds with user object", (done) => {
     request(app)
