@@ -5,6 +5,7 @@ const cors = require("cors");
 const registerRouter = require("./routes/registerRouter");
 const loginRouter = require("./routes/loginRouter");
 const logoutRouter = require("./routes/logoutRouter");
+const countTotalQuantityRouter = require("./routes/countTotalQuantityRouter");
 const userRouter = require("./routes/userRouter");
 const rowsRouter = require("./routes/rowsRouter");
 const partsRouter = require("./routes/partsRouter");
@@ -43,6 +44,7 @@ app.use(passport.session());
 require("./passportConfig")(passport);
 
 app.use("/api/register", registerRouter);
+app.use("/api/updateTotalQuantity", countTotalQuantityRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/logout", logoutRouter);
