@@ -1,5 +1,8 @@
 const editPartsRouter = require("express").Router();
 const pool = require("../db");
+
+/*  Edits an entry in the locations table with the updated information provided by the user.  */
+
 var internal_part_number;
 var old_internal_part_number;
 var part_name;

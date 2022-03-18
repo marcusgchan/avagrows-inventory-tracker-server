@@ -1,6 +1,8 @@
 const deletePartRouter = require("express").Router();
 const pool = require("../db");
 
+/*  What does this function do exactly? I am not sure. */
+
 deletePartRouter.post("/", async (req, res) => {
   const { internal_part_number, location_id, status_id } = req.body;
 

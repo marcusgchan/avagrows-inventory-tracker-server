@@ -1,5 +1,11 @@
 const deleteLocationRouter = require("express").Router();
 const pool = require("../db");
+
+/*  Deletes a part from the locations table. 
+    First checks if there are parts stored at this specific location.
+    If there are, this function does not allow the user to delete the location.
+    Otherwise, the location is removed. */
+
 var location_id;
 
 deleteLocationRouter.post("/", async (req, res) => {
