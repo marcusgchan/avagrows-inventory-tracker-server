@@ -3,11 +3,10 @@ const pool = require("../db");
 
 queryPartsQuantityRouter.get("/", (req, res) => {
   //select all parts from part quantity table
-  var queryPartsQuantityQuery =
-    "SELECT * FROM part_quantity;";
+  var queryPartsQuantityQuery = "SELECT * FROM part_quantity;";
 
   pool.query(queryPartsQuantityQuery, (error, result) => {
-    if (error) {
+    if (error) {  
       console.log(error);
       return;
     }
