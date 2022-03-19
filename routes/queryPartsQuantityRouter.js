@@ -8,11 +8,12 @@ queryPartsQuantityRouter.get("/", (req, res) => {
   pool.query(queryPartsQuantityQuery, (error, result) => {
     if (error) {  
       console.log(error);
-      res.status(200).end
+      res.status(200).end();
       
     }
+    var results = result.rows;
+    res.json(results);
     
-    res.send({results:500});
   });
 });
 
