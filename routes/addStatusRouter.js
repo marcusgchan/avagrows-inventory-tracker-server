@@ -1,19 +1,23 @@
 const addStatusRouter = require("express").Router();
+const req = require("express/lib/request");
 const pool = require("../db");
-var status_id;
-var log_id;
-var status_name;
-var note;
+
 
 //add to status table
-addLocationRouter.post("/", (req, res) => {
+addStatusRouter.post("/", (req, res) => {
+    let{
+ status_id,
+ log_id,
+ status_name,
+ note,
+}=req.body
   var addStatusTableQuery = `INSERT into statuses values(${status_id},${log_id},'${status_name}','${note}');`;
   //query to add status into database
   pool.query(addStatusTableQuery, (error, result) => { 
     if (error) {
-      return;
+      res.status(200).end();
     }
-    res.send(done);
+    res.status(400).end();
   });
 });
 

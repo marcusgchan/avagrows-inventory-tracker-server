@@ -1,19 +1,23 @@
 const addLocationRouter = require("express").Router();
+const req = require("express/lib/request");
 const pool = require("../db");
-var location_id;
-var log_id;
-var location_name;
-var address;
-var postal_code;
+
 //add to location table
 addLocationRouter.post("/", (req, res) => {
-  var addLocationTableQuery = `INSERT into locations values(${location_id},${log_id},'${location_name}','${address}', '${postal_code});`;
+ var {
+ location_id,
+ log_id,
+ location_name,
+ address,
+ postal_code,
+} = req.body
+  var addLocationTableQuery = `INSERT into locations values(${location_id},${log_id},'${location_name}','${address}', '${postal_code}');`;
   //query to add location into database
   pool.query(addLocationTableQuery, (error, result) => { 
     if (error) {
       return;
     }
-    res.send(done);
+    res.status(400).json("done");
   });
 });
 

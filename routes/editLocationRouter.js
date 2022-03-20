@@ -3,21 +3,24 @@ const pool = require("../db");
 
 /*  Edits an entry in the locations table with the updated information provided by the user.  */
 
-var old_location_id
-var new_location_id
-var log_id
-var location_name
-var address
-var postal_code
-
 editLocationRouter.post("/", (req, res) => {
+  
+let{
+old_location_id,
+ new_location_id,
+ log_id,
+ location_name,
+ address,
+ postal_code,
+}=req.body
+
   var editLocationTableQuery = `UPDATE locations SET location_id = ${new_location_id}, log_id = ${log_id}, location_name = '${location_name}', address = '${address}', postal_code = '${postal_code}' WHERE location_id = ${old_location_id};`;
 
   pool.query(editLocationTableQuery, (error, result) => {
     if (error) {
-      return;
+      res.status(400).json("error")
     }
-    res.send(done);
+    res.status(200).json("done");
   });
 });
 
