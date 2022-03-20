@@ -13,8 +13,8 @@ changeLocationQuantityRouter.post("/", async (req, res) => {
     old_quantity,
   } = req.body;
 
-  // the amount that is moved into the new location would be the amount of parts missing from
-  // the previous quantity
+  // the amount that is moved into the new location would be the amount of parts missing from the previous quantity
+  // ex. old quantity was 20. quantity is now 9. 20 - 9 = 11. 11 is the amount that was moved
   let moveAmount = old_quantity - quantity;
 
   try {
@@ -52,7 +52,9 @@ changeLocationQuantityRouter.post("/", async (req, res) => {
         //updates the new and previous location
         await pool.query(updatePrevLocationQuery);
         await pool.query(updateNewLocationQuery);
-      } 
+      }
+
+      res.status(200).end();
     }
   } catch (e) {
     res.status(400).json("Bad request");
