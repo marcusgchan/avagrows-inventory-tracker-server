@@ -6,16 +6,15 @@ const pool = require("../db");
     throws an error if a match is found,
     otherwise deletes all entries with that part number. */
 
-
 var partsQuantityRows;
 deletePartsRouter.post("/", async (req, res) => {
-    var internal_part_number=req.body.internal_part_number;
+  var internal_part_number = req.body.internal_part_number;
   try {
     var partsQuantityQuery = `SELECT * FROM part_quantity WHERE internal_part_number = '${internal_part_number}';`;
     const result = await pool.query(partsQuantityQuery);
     partsQuantityRows = result.rows;
     if (partsQuantityRows.length > 0) {
-        res.status(400).json("error");
+      res.status(400).json("error");
     }
 
     var addStatusTableQuery = `DELETE FROM parts WHERE internal_part_number = '${internal_part_number}';`;
