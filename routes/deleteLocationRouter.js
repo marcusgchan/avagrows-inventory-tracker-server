@@ -6,9 +6,10 @@ const pool = require("../db");
     If there are, this function does not allow the user to delete the location.
     Otherwise, the location is removed. */
 
-var location_id;
+
 
 deleteLocationRouter.post("/", async (req, res) => {
+    var location_id = req.body.location_id;
   var deleteLocationTableQuery = `DELETE FROM locations WHERE location_id = ${location_id};`;
   var checkIfInUse = `SELECT * FROM part_quantity WHERE location_id = ${location_id};`;
   var results;
@@ -19,6 +20,7 @@ deleteLocationRouter.post("/", async (req, res) => {
 
     if (results.length < 1) {
       await pool.query(deleteLocationTableQuery);
+      res.status(200).json("done")
     } else {
       console.log("This location is still in use!");
     }

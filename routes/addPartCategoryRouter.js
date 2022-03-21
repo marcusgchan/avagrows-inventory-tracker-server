@@ -1,17 +1,20 @@
 const addPartCategoryRouter = require("express").Router();
+const req = require("express/lib/request");
 const pool = require("../db");
-var part_category_id;
-var part_id;
-var part_category_name;
+
 //add to part category table
 addPartCategoryRouter.post("/", (req, res) => {
-  var addPartCategoryTableQuery = `INSERT into locations values(${part_category_id},'${part_id}','${part_category_name}');`;
+  let{ part_category_id,
+ part_id,
+ part_category_name,
+  } = req.body
+  var addPartCategoryTableQuery = `INSERT into part_categories values(${part_category_id},'${part_id}','${part_category_name}');`;
   //querry to add part category into table
   pool.query(addPartCategoryTableQuery, (error, result) => {
     if (error) {
-      return;
+      res.status(200).json("error")
     }
-    res.send(done);
+    res.status(200).json("done")
   });
 });
 
