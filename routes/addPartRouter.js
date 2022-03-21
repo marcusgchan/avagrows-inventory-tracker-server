@@ -41,7 +41,10 @@ addPartQuantityRouter.post("/", async (req, res) => {
       let addNewPartTotalQuantity = `UPDATE parts SET total_quantity = '${updatedQuantity}' WHERE internal_part_number = '${internal_part_number}'`;
       await pool.query(addNewPartTotalQuantity);
 
-      res.status(200).end();
+      let rowResults = await pool.query(
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+      );
+      res.status(200).json(rowResults.rows);
     } else {
       //if part is already in table then return
       res
