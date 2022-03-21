@@ -1,8 +1,8 @@
-const changeLocationQuantityRouter = require("express").Router();
+const moveLocationRouter = require("express").Router();
 const pool = require("../db");
 
 // change location of items
-changeLocationQuantityRouter.post("/", async (req, res) => {
+moveLocationRouter.post("/", async (req, res) => {
   let {
     internal_part_number,
     quantity,
@@ -64,4 +64,4 @@ changeLocationQuantityRouter.post("/", async (req, res) => {
   }
 });
 
-module.exports = changeLocationQuantityRouter;
+module.exports = moveLocationRouter;
