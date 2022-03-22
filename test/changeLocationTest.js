@@ -6,7 +6,8 @@ var initQuantity1;
 var initQuantity2;
 var finalQuantity1;
 var finalQuantity2;
-var quantity = 1;
+var quantity;
+var moveAmount
 var totalQuantity2;
 chai.use(chaiHttp);
 
@@ -18,6 +19,7 @@ describe("part_location_change", function () {
         .get("/api/queryForLocationQuantityRouter")
         .end(function(err,res){
             initQuantity1=res.body;
+            quantity=initQuantity1-1;
             console.log(initQuantity1);
        
        chai 
@@ -51,9 +53,10 @@ describe("part_location_change", function () {
                 .get("/api/queryForLocationQuantity2Router")
                 .end(function (err, res) {
                 var finalQuantity2 = res.body;
+                moveAmount=initQuantity1-quantity;
                 console.log(finalQuantity2);
-                (initQuantity1-quantity).should.equal(finalQuantity1);  
-                (initQuantity2+quantity).should.equal(finalQuantity2); 
+                (moveAmount).should.equal(initQuantity1-finalQuantity1);  
+                (initQuantity2+moveAmount).should.equal(finalQuantity2); 
                 done(); 
                         });
                     });

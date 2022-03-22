@@ -3,7 +3,7 @@ const pool = require("../db");
 
 queryForEditStatusRouter.get("/", (req, res) => {
   //select all parts from part quantity table
-  var queryPartsQuery = "SELECT * from statuses  where status_id = 10";
+  var queryPartsQuery = "SELECT * from statuses where status_id = 10";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {  

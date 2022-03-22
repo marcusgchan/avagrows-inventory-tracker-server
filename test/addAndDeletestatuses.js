@@ -20,7 +20,7 @@ describe("statuses_add_remove", function () {
           .request(server)
           .post("/api/addStatusRouter")
           .send({
-            status_id:10,
+            status_id:9,
             log_id:10,
             status_name:"test",
             note:"test",
@@ -56,7 +56,7 @@ describe("statuses_add_remove", function () {
         .request(server)
         .post("/api/deleteStatusRouter")
         .send({
-          status_id: 10,
+          status_id: 9,
           
           
         })
