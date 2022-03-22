@@ -45,7 +45,7 @@ const editStatusRouter = require("./routes/editStatusRouter");
 const checkPartExists = require("./routes/checkPartExistsRouter");
 const queryForConversionQuantity = require ("./routes/queryForConversionQuantity");
 const queryForConversionTotalQuantity = require("./routes/queryForConversionTotalQuantity");
-const ConvertPartsRouter = require("./routes/ConvertPartsRouter");
+
 const app = express();
 const PORT = process.env.PORT;
 const passport = require("passport");
@@ -125,7 +125,7 @@ app.use("/api/editStatusRouter", editStatusRouter);
 app.use("/api/checkPartExists", checkPartExists);
 app.use("/api/queryForConversionQuantity",queryForConversionQuantity);
 app.use("/api/queryForConversionTotalQuantity",queryForConversionTotalQuantity);
-app.use("/api/ConvertPartsRouter",ConvertPartsRouter);
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

@@ -26,7 +26,7 @@ describe("convert_parts", function () {
             var numTotal=res.body;
             chai
           .request(server)
-          .post("/api/ConverPartsRouter")
+          .post("/api/Convert")
           .send({
             conversionQuantity: conversionQuantity,
             internal_part_number:"BYTE",
