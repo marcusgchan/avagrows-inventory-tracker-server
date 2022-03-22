@@ -4,7 +4,7 @@ const pool = require("../db");
 changeQuantityRouter.post("/", async (req, res) => {
   let {
     old_quantity,
-    quantity,
+    new_quantity,
     total_quantity,
     internal_part_number,
     location_id,
@@ -12,10 +12,10 @@ changeQuantityRouter.post("/", async (req, res) => {
   } = req.body;
 
   //query to update part to new value
-  var changeQuantityTableQuery = `UPDATE part_quantity SET quantity = ${quantity} WHERE internal_part_number ='${internal_part_number}' AND location_id =${location_id} AND status_id =${status_id};`;
+  var changeQuantityTableQuery = `UPDATE part_quantity SET quantity = ${new_quantity} WHERE internal_part_number ='${internal_part_number}' AND location_id =${location_id} AND status_id =${status_id};`;
   //query to update parts table
   var changeTotalQuantityTableQuery = `UPDATE parts SET total_quantity = ${
-    total_quantity + quantity - old_quantity
+    total_quantity + new_quantity - old_quantity
   } WHERE internal_part_number ='${internal_part_number}';`;
   //check parts table for an entry
   var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = '${internal_part_number}';`;
