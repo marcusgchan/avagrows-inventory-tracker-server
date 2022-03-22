@@ -5,17 +5,17 @@ const pool = require("../db");
 moveLocationRouter.post("/", async (req, res) => {
   let {
     internal_part_number,
-    quantity,
     location_id,
     status_id,
     new_location_id,
     new_status_id,
     old_quantity,
+    new_quantity,
   } = req.body;
 
   // the amount that is moved into the new location would be the amount of parts missing from the previous quantity
   // ex. old quantity was 20. quantity is now 9. 20 - 9 = 11. 11 is the amount that was moved
-  let moveAmount = old_quantity - quantity;
+  let moveAmount = old_quantity - new_quantity;
 
   try {
     //check if there is quantity available to be moved
@@ -39,7 +39,7 @@ moveLocationRouter.post("/", async (req, res) => {
       }
 
       //query that updates quantity of the part row with the previous location and status
-      let updatePrevLocationQuery = `UPDATE part_quantity SET quantity = ${quantity} WHERE internal_part_number = '${internal_part_number}' AND status_id = ${status_id} AND location_id = ${location_id};`;
+      let updatePrevLocationQuery = `UPDATE part_quantity SET quantity = ${new_quantity} WHERE internal_part_number = '${internal_part_number}' AND status_id = ${status_id} AND location_id = ${location_id};`;
 
       //query that creates a row for where the parts will be moved into if the row doesn't already exist
       let insertIntoNewLocationQuery = `INSERT into part_quantity values('${internal_part_number}', '${new_location_id}', '${new_status_id}', '${moveAmount}', '', DEFAULT)`;
