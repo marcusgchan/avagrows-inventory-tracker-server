@@ -2,7 +2,7 @@ const checkPartExistsRouter = require("express").Router();
 const pool = require("../db");
 
 checkPartExistsRouter.get("/", async (req, res) => {
-  let partNumber = req.body;
+  let partNumber = req.body.partNumber;
 
   try {
     let result = await pool.query(
