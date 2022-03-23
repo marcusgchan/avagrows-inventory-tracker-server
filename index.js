@@ -129,7 +129,7 @@ app.use(
   "/api/queryForConversionTotalQuantity",
   queryForConversionTotalQuantity
 );
-app.use("/api/getWip", wipRouter);
+app.use("/api/wip", wipRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
