@@ -9,8 +9,6 @@ checkPartExistsRouter.post("/", async (req, res) => {
       `select * from parts where internal_part_number = '${partNumber}'`
     );
 
-    console.log(results);
-
     if (results.rows.length !== 0) {
       res.status(200).send(true);
     } else {
