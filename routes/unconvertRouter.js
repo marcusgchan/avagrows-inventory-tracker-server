@@ -41,7 +41,7 @@ unconvertRouter.post("/", async (req, res) => {
         `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
 
-      let result = { rows: rowResults.rows, convertPossible: false };
+      let result = { rows: rowResults.rows, unconvertPossible: false };
       return res.status(200).json(result);
     }
     //update quantity for wip
@@ -74,7 +74,7 @@ unconvertRouter.post("/", async (req, res) => {
           `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
         );
 
-        let result = { rows: rowResults.rows, convertPossible: false };
+        let result = { rows: rowResults.rows, unconvertPossible: false };
         return res.status(200).json(result);
       } //get quantity
       let ConvertPartsRouterQuery4 = `select * from part_quantity where internal_part_number = '${array[i].part_id}' and location_id = ${location_id} and status_id=2;`;
@@ -110,7 +110,7 @@ unconvertRouter.post("/", async (req, res) => {
       `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
     );
 
-    let result = { rows: rowResults.rows, convertPossible: true };
+    let result = { rows: rowResults.rows, unconvertPossible: true };
     return res.status(200).json(result);
   } catch (e) {
     res.status(400).send(e);
