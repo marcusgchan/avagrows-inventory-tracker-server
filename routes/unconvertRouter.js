@@ -42,27 +42,20 @@ unconvertRouter.post("/", async(req, res) => {
       let rowResults = await pool.query(
         `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
   );
-  
-let result = {rows : rowResults.rows, convertPossible : false}
-return res.status(200).json(result);
+      let result = {rows : rowResults.rows, convertPossible : false}
+      return res.status(200).json(result);
+
     }
-    //update quantity for wip
-    let ConvertPartsRouterQuery13 = `update part_quantity set quantity=${quantity-1*conversionQuantity} where internal_part_number = '${internal_part_number}' and location_id = ${final_location_id} and status_id=2;`;
     
-    await pool.query(ConvertPartsRouterQuery13);
     //get total quantity for wip
     let ConvertPartsRouterQuery6 = `select * from parts where internal_part_number = '${internal_part_number}';`;
     
     const parts_total_quantity_res = await pool.query(ConvertPartsRouterQuery6);
     let total_quantity=parts_total_quantity_res.rows[0].total_quantity;
-    //update total quantity for wip
-    let ConvertPartsRouterQuery7 = `update parts set total_quantity=${total_quantity-1*conversionQuantity} where internal_part_number = '${internal_part_number}';`;
     
-    await pool.query(ConvertPartsRouterQuery7);
     
  
   //check
-  
   for(let i=0;i<wip_parts_res.rows.length;i++){
     let ConvertPartsRouterQuery3 = `select * from part_quantity where internal_part_number = '${array[i].part_id}' and location_id = ${location_id} and status_id=2;`;
     
@@ -76,7 +69,11 @@ return res.status(200).json(result);
       
     let result = {rows : rowResults.rows, convertPossible : false}
     return res.status(200).json(result);
-    }   //get quantity
+    }
+  }
+  
+  for(let i=0;i<wip_parts_res.rows.length;i++){
+       //get quantity
         let ConvertPartsRouterQuery4 = `select * from part_quantity where internal_part_number = '${array[i].part_id}' and location_id = ${location_id} and status_id=2;`;
     const part_quantity_quantity_res = await pool.query(ConvertPartsRouterQuery4);
     
@@ -95,6 +92,14 @@ return res.status(200).json(result);
     let ConvertPartsRouterQuery7 = `update parts set total_quantity=${total_quantity+array[i].wip_part_quantity_needed*conversionQuantity} where internal_part_number = '${array[i].part_id}';`;
     await pool.query(ConvertPartsRouterQuery7);
   }
+    //update quantity for wip
+    let ConvertPartsRouterQuery13 = `update part_quantity set quantity=${quantity-1*conversionQuantity} where internal_part_number = '${internal_part_number}' and location_id = ${final_location_id} and status_id=2;`;
+    
+    await pool.query(ConvertPartsRouterQuery13);
+  //update total quantity for wip
+    let ConvertPartsRouterQuery7 = `update parts set total_quantity=${total_quantity-1*conversionQuantity} where internal_part_number = '${internal_part_number}';`;
+    
+    await pool.query(ConvertPartsRouterQuery7);
   
   
     let rowResults = await pool.query(

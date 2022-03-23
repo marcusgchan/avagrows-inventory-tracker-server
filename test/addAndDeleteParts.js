@@ -65,7 +65,7 @@ describe("parts_add_remove", function () {
           
         })
         .end(function (error, res) {
-            console.log(res.body)
+            
           chai
             .request(server)
             .get("/api/queryForGetPartsRouter")
