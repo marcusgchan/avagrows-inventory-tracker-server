@@ -43,8 +43,9 @@ const editPartsRouter = require("./routes/editPartsRouter");
 const queryForEditStatusRouter = require("./routes/queryForEditStatusRouter");
 const editStatusRouter = require("./routes/editStatusRouter");
 const checkPartExists = require("./routes/checkPartExistsRouter");
-const queryForConversionQuantity = require ("./routes/queryForConversionQuantity");
+const queryForConversionQuantity = require("./routes/queryForConversionQuantity");
 const queryForConversionTotalQuantity = require("./routes/queryForConversionTotalQuantity");
+const wipRouter = require("./routes/wipRouter");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -123,8 +124,12 @@ app.use("/api/editPartsRouter", editPartsRouter);
 app.use("/api/queryForEditStatusRouter", queryForEditStatusRouter);
 app.use("/api/editStatusRouter", editStatusRouter);
 app.use("/api/checkPartExists", checkPartExists);
-app.use("/api/queryForConversionQuantity",queryForConversionQuantity);
-app.use("/api/queryForConversionTotalQuantity",queryForConversionTotalQuantity);
+app.use("/api/queryForConversionQuantity", queryForConversionQuantity);
+app.use(
+  "/api/queryForConversionTotalQuantity",
+  queryForConversionTotalQuantity
+);
+app.use("/api/getWip", wipRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
