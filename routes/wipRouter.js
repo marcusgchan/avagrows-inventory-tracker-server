@@ -1,16 +1,16 @@
 const wipRouter = require("express").Router();
+const { json } = require("express/lib/response");
 const pool = require("../db");
 
 wipRouter.get("/", (req, res) => {
   var wipTableQuery = "SELECT * FROM wip;";
 
-  pool.query(partsTableQuery, (error, result) => {
+  pool.query(wipTableQuery, (error, result) => {
     if (error) {
-      console.log(error);
-      return;
+      return res.status(400).send(error);
     }
     var results = { rows: result.rows };
-    res.json(results.rows);
+    res.status(200).json(results.rows);
   });
 });
 
