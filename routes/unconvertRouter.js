@@ -34,6 +34,15 @@ unconvertRouter.post("/", async (req, res) => {
     const part_quantity_quantity_res = await pool.query(
       ConvertPartsRouterQuery4
     );
+    if(part_quantity_quantity_res.rows.length===0){
+      
+      let rowResults = await pool.query(
+            `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+      );
+      
+    let result = {rows : rowResults.rows, convertPossible : false}
+    return res.status(200).json(result);
+    }
     let quantity = part_quantity_quantity_res.rows[0].quantity;
     //check to see if enough quantity to convert
     if (quantity - 1 * conversionQuantity < 0) {
@@ -55,18 +64,15 @@ unconvertRouter.post("/", async (req, res) => {
  
   //check
   for(let i=0;i<wip_parts_res.rows.length;i++){
+    
     let ConvertPartsRouterQuery3 = `select * from part_quantity where internal_part_number = '${array[i].part_id}' and location_id = ${location_id} and status_id=2;`;
     
     const part_quantity_res = await pool.query(ConvertPartsRouterQuery3);
     
     if(part_quantity_res.rows.length===0){
       
-      let rowResults = await pool.query(
-            `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
-      );
-      
-    let result = {rows : rowResults.rows, convertPossible : false}
-    return res.status(200).json(result);
+      let addIntoPartQuantity = `insert into part_quantity values('${array[i].part_id}',${location_id},2,0,'');`
+      await pool.query(addIntoPartQuantity);
     }
   }
   
