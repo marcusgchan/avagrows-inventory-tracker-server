@@ -28,7 +28,7 @@ describe("part_quantity_change", function () {
           .post("/api/changeQuantity")
           .send({
             old_quantity: oldQuantity,
-            quantity: quantity,
+            new_quantity: quantity,
             total_quantity: totalQuantity,
             internal_part_number: "2MP04",
             location_id: 1,

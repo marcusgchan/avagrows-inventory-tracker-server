@@ -1,44 +1,42 @@
 const unconvertRouter = require("express").Router();
-
 const pool = require("../db");
 
 let array = [];
 
-let location_id=0;
-let final_location_id=0;
+let location_id = 0;
+let final_location_id = 0;
 
-unconvertRouter.post("/", async(req, res) => {
-    
-
-  let  conversionQuantity=req.body.conversionQuantity;
+unconvertRouter.post("/", async (req, res) => {
+  let conversionQuantity = req.body.conversionQuantity;
   let internal_part_number = req.body.internal_part_number;
-  
 
   let ConvertPartsRouterQuery = `select * from wip where part_id = '${internal_part_number}';`;
-  
-  try{
-      //get wip id and location id
-  const wip_res=await pool.query(ConvertPartsRouterQuery)
-  
-  let wip_id=wip_res.rows[0].wip_id;
-  location_id=wip_res.rows[0].location_id;
-  final_location_id=wip_res.rows[0].final_location_id;
- 
-  //get formula
-  let ConvertPartsRouterQuery2 = `select * from wip_parts where wip_id = ${wip_id};`;
-  let wip_parts_res= await pool.query(ConvertPartsRouterQuery2);
-//store formula in array with IPN and quantity needed
-    
-  for(let i=0;i<wip_parts_res.rows.length;i++){
+
+  try {
+    //get wip id and location id
+    const wip_res = await pool.query(ConvertPartsRouterQuery);
+
+    let wip_id = wip_res.rows[0].wip_id;
+    location_id = wip_res.rows[0].location_id;
+    final_location_id = wip_res.rows[0].final_location_id;
+
+    //get formula
+    let ConvertPartsRouterQuery2 = `select * from wip_parts where wip_id = ${wip_id};`;
+    let wip_parts_res = await pool.query(ConvertPartsRouterQuery2);
+    //store formula in array with IPN and quantity needed
+
+    for (let i = 0; i < wip_parts_res.rows.length; i++) {
       array.push(wip_parts_res.rows[i]);
-  }
-  
-  //get quantity for wip
+    }
+
+    //get quantity for wip
     let ConvertPartsRouterQuery4 = `select * from part_quantity where internal_part_number = '${internal_part_number}' and location_id = ${final_location_id} and status_id=2;`;
-    const part_quantity_quantity_res = await pool.query(ConvertPartsRouterQuery4);
-    let quantity=part_quantity_quantity_res.rows[0].quantity;
+    const part_quantity_quantity_res = await pool.query(
+      ConvertPartsRouterQuery4
+    );
+    let quantity = part_quantity_quantity_res.rows[0].quantity;
     //check to see if enough quantity to convert
-    if(quantity-1*conversionQuantity<0){
+    if (quantity - 1 * conversionQuantity < 0) {
       let rowResults = await pool.query(
         `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
   );
@@ -49,7 +47,7 @@ unconvertRouter.post("/", async(req, res) => {
     
     //get total quantity for wip
     let ConvertPartsRouterQuery6 = `select * from parts where internal_part_number = '${internal_part_number}';`;
-    
+
     const parts_total_quantity_res = await pool.query(ConvertPartsRouterQuery6);
     let total_quantity=parts_total_quantity_res.rows[0].total_quantity;
     
@@ -103,18 +101,14 @@ unconvertRouter.post("/", async(req, res) => {
   
   
     let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
-      );
-      
-    let result = {rows : rowResults.rows, convertPossible : true}
+      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+    );
+
+    let result = { rows: rowResults.rows, unconvertPossible: true };
     return res.status(200).json(result);
-
-  
-} catch(e){
-    
+  } catch (e) {
     res.status(400).send(e);
-}
-
+  }
 });
 
 module.exports = unconvertRouter;

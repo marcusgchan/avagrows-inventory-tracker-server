@@ -33,12 +33,12 @@ describe("part_location_change", function () {
           .post("/api/moveLocation")
           .send({
             internal_part_number: "LIGHTSTAND",
-            quantity: quantity,
             location_id: 1,
             status_id: 1,
             new_location_id: 2,
             new_status_id: 1,
             old_quantity: initQuantity1,
+            new_quantity: quantity,
           })
           .end(function (error, res) {
             chai

@@ -4,8 +4,8 @@ var server = require("../index");
 var should = chai.should();
 chai.use(chaiHttp);
 const conversionQuantity = 2;
-describe("convert_parts", function () {
-  it("should see if parts are converted and total quantity is changed", function (done) {
+describe("unconvert_parts", function () {
+  it("should see if parts are unconverted and total quantity is changed", function (done) {
 
         
        
@@ -26,7 +26,7 @@ describe("convert_parts", function () {
             var numTotal=res.body;
             chai
           .request(server)
-          .post("/api/Convert")
+          .post("/api/unconvert")
           .send({
             conversionQuantity: conversionQuantity,
             internal_part_number:"BYTE",
@@ -40,7 +40,7 @@ describe("convert_parts", function () {
                 var num2 = res.body;
                 for(var i=0;i<5;i++){
                     //console.log(num2[i].quantity);
-                    if(num2[i].internal_part_number!="BYTE"){
+                    if(num2[i].internal_part_number=="BYTE"){
                         (num[i].quantity - num2[i].quantity).should.equal(1*conversionQuantity);
                     } else{
                     (num2[i].quantity - num[i].quantity).should.equal(1*conversionQuantity);
@@ -51,9 +51,10 @@ describe("convert_parts", function () {
                 .get("/api/queryForConversionTotalQuantity")
                 .end(function(err,res){
                     var numTotal2=res.body;
-
+                    console.log(numTotal2)
                     for(var i=0;i<5;i++){
-                        if(num2[i].internal_part_number!="BYTE")
+                        console.log("hi")
+                        if(num2[i].internal_part_number=="BYTE")
                             (numTotal[i].total_quantity - numTotal2[i].total_quantity).should.equal(1*conversionQuantity);
                         else
                         (numTotal2[i].total_quantity - numTotal[i].total_quantity).should.equal(1*conversionQuantity);
