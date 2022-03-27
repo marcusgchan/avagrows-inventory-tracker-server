@@ -106,6 +106,7 @@ unconvertRouter.post("/", async (req, res) => {
     
     await pool.query(ConvertPartsRouterQuery7);
   
+    // Generates a log.
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -118,14 +119,11 @@ unconvertRouter.post("/", async (req, res) => {
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     
-
     today = mm + '/' + dd + '/' + yyyy + '/' + strTime;
     
-    
-    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}', 2 ,'${today}','') returning log_id;`
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}', 2 ,'${today}','','Unconvert') returning log_id;`
     let log_id = await pool.query(loggingQuery);
-    
-
+  
     let eventQuery = `insert into convert_events values(${log_id.rows[0].log_id},2,${conversionQuantity},0);`
     await pool.query(eventQuery);
     
