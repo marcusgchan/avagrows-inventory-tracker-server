@@ -140,7 +140,7 @@ return res.status(200).json(result);
 
     let loggingQuery = `insert into logs values('${user_id}','${internal_part_number}',2,'${today}','') returning log_id;`
     let log_id = await pool.query(loggingQuery);
-    let eventQuery = `insert into convertEvent values('${log_id}',2,${conversionQuantity},1);`
+    let eventQuery = `insert into convert_events values('${log_id}',2,${conversionQuantity},1);`
     await pool.query(eventQuery);
 
     let rowResults = await pool.query(

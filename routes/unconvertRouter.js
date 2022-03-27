@@ -106,11 +106,6 @@ unconvertRouter.post("/", async (req, res) => {
     
     await pool.query(ConvertPartsRouterQuery7);
   
-  
-    let rowResults = await pool.query(
-      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
-    );
-
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -126,11 +121,20 @@ unconvertRouter.post("/", async (req, res) => {
 
     today = mm + '/' + dd + '/' + yyyy + '/' + strTime;
     
-
-    let loggingQuery = `insert into logs values('${user_id}','${internal_part_number}',2,'${today}','') returning log_id;`
+    
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}', 2 ,'${today}','') returning log_id;`
     let log_id = await pool.query(loggingQuery);
-    let eventQuery = `insert into convertEvent values('${log_id}',2,${conversionQuantity},0);`
+    
+
+    let eventQuery = `insert into convert_events values(${log_id.rows[0].log_id},2,${conversionQuantity},0);`
     await pool.query(eventQuery);
+    
+    
+    let rowResults = await pool.query(
+      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+    );
+
+    
 
     let result = { rows: rowResults.rows, unconvertPossible: true };
     return res.status(200).json(result);
