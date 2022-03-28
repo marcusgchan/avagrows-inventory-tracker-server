@@ -59,9 +59,10 @@ addPartQuantityRouter.post("/", async (req, res) => {
       
       let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',4,'${today}','','Added Part') returning log_id;`
       let log_id = await pool.query(loggingQuery);
-    
-      let eventQuery = `insert into add_events values(${log_id.rows[0].log_id},4,${internal_part_number},${quantity});`
+      
+      let eventQuery = `insert into add_events values(${log_id.rows[0].log_id},4,'${internal_part_number}',${quantity});`
       await pool.query(eventQuery);
+      
 
       let rowResults = await pool.query(
         `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
@@ -71,7 +72,7 @@ addPartQuantityRouter.post("/", async (req, res) => {
     } else {
       //if part is already in table then return
       res
-        .status(400)
+        .status(200)
         .json("This part already exists at this location with this status!");
     }
 

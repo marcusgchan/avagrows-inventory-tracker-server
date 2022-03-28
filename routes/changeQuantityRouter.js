@@ -9,6 +9,7 @@ changeQuantityRouter.post("/", async (req, res) => {
     internal_part_number,
     location_id,
     status_id,
+    user_id,
   } = req.body;
 
   //query to update part to new value
@@ -46,7 +47,7 @@ changeQuantityRouter.post("/", async (req, res) => {
     
     today = mm + '/' + dd + '/' + yyyy + '/' + strTime;
     
-    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',1,'${today}','','Deleted Part') returning log_id;`
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',1,'${today}','','Quantity changed') returning log_id;`
     let log_id = await pool.query(loggingQuery);
   
     let eventQuery = `insert into quantity_change_events values(${log_id.rows[0].log_id},1,${new_quantity - old_quantity});`
