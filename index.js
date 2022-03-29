@@ -46,12 +46,17 @@ const checkPartExists = require("./routes/checkPartExistsRouter");
 const queryForConversionQuantity = require("./routes/queryForConversionQuantity");
 const queryForConversionTotalQuantity = require("./routes/queryForConversionTotalQuantity");
 const wipRouter = require("./routes/wipRouter");
+const queryForLogRouter = require("./routes/queryForLogRouter");
+const queryForEventConvertRouter = require("./routes/queryForEventConvertRouter");
+const queryForDeleteEventsRouter = require("./routes/queryForDeleteEventsRouter");
+const queryForAddEventRouter = require("./routes/queryForAddEventRouter");
 
 const app = express();
 const PORT = process.env.PORT;
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const { application_name } = require("pg/lib/defaults");
 
 app.use(express.json());
 app.use(
@@ -130,6 +135,10 @@ app.use(
   queryForConversionTotalQuantity
 );
 app.use("/api/wip", wipRouter);
+app.use("/api/queryForEventConvertRouter",queryForEventConvertRouter);
+app.use("/api/queryForLogRouter",queryForLogRouter);
+app.use("/api/queryForAddEventRouter",queryForAddEventRouter);
+app.use("/api/queryForDeleteEventsRouter",queryForDeleteEventsRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
