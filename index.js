@@ -50,6 +50,7 @@ const queryForLogRouter = require("./routes/queryForLogRouter");
 const queryForEventConvertRouter = require("./routes/queryForEventConvertRouter");
 const queryForDeleteEventsRouter = require("./routes/queryForDeleteEventsRouter");
 const queryForAddEventRouter = require("./routes/queryForAddEventRouter");
+const queryForEventLocationRouter = require("./routes/queryForEventLocationRouter");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -139,6 +140,7 @@ app.use("/api/queryForEventConvertRouter",queryForEventConvertRouter);
 app.use("/api/queryForLogRouter",queryForLogRouter);
 app.use("/api/queryForAddEventRouter",queryForAddEventRouter);
 app.use("/api/queryForDeleteEventsRouter",queryForDeleteEventsRouter);
+app.use("/api/queryForEventLocationRouter",queryForEventLocationRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));

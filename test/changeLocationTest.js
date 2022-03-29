@@ -7,7 +7,7 @@ var initQuantity2;
 var finalQuantity1;
 var finalQuantity2;
 var quantity;
-var moveAmount
+var moveAmount;
 var totalQuantity2;
 chai.use(chaiHttp);
 
