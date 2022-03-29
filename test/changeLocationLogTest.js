@@ -17,7 +17,7 @@ describe("part_location_change", function () {
       .end(function (err, res) {
         initQuantity1 = res.body;
         quantity = initQuantity1 - 1;
-        console.log(initQuantity1);
+        
 
         chai
           .request(server)
@@ -26,7 +26,7 @@ describe("part_location_change", function () {
             var numLogs = res.body.length;
             chai
               .request(server)
-              .get(queryForEventLocationRouter)
+              .get("/api/queryForEventLocationRouter")
               .end(function (err, res) {
                 var numRelocationEvents = res.body.length;
                 chai
@@ -47,7 +47,7 @@ describe("part_location_change", function () {
                       .get("/api/queryForEventLocationRouter")
                       .end(function (err, res) {
                         var numRelocationEvents2 = res.body.length;
-                        console.log(numRelocationEvents2);
+                        
 
                         chai
                           .request(server)

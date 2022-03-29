@@ -6,7 +6,7 @@ var totalQuantity;
 var quantity = 30;
 chai.use(chaiHttp);
 
-describe("part_quantity_change", function () {
+describe("part_quantity_change_log", function () {
   it("should see if the log for change quantity is added to both the log and quantity event tables", function (done) {
     chai
       .request(server)
