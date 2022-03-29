@@ -4,9 +4,9 @@ const pool = require("../db");
 
 //add to part category table
 addPartCategoryRouter.post("/", (req, res) => {
-  let{ part_category_id,
- part_id,
- part_category_name,
+  let { part_category_id,
+    part_id,
+    part_category_name,
   } = req.body
   var addPartCategoryTableQuery = `INSERT into part_categories values(${part_category_id},'${part_id}','${part_category_name}');`;
   //querry to add part category into table

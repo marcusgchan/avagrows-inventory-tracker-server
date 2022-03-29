@@ -3,9 +3,7 @@ var chaiHttp = require("chai-http");
 var server = require("../index");
 var should = chai.should();
 var initQuantity1;
-var initQuantity2;
 var quantity;
-var moveAmount;
 chai.use(chaiHttp);
 
 describe("part_location_change", function () {
@@ -17,18 +15,19 @@ describe("part_location_change", function () {
       .end(function (err, res) {
         initQuantity1 = res.body;
         quantity = initQuantity1 - 1;
-        
 
         chai
           .request(server)
           .get("/api/queryForLogRouter")
           .end(function (err, res) {
             var numLogs = res.body.length;
+
             chai
               .request(server)
               .get("/api/queryForEventLocationRouter")
               .end(function (err, res) {
                 var numRelocationEvents = res.body.length;
+
                 chai
                   .request(server)
                   .post("/api/moveLocation")
@@ -42,12 +41,12 @@ describe("part_location_change", function () {
                     new_quantity: quantity,
                   })
                   .end(function (error, res) {
+
                     chai
                       .request(server)
                       .get("/api/queryForEventLocationRouter")
                       .end(function (err, res) {
                         var numRelocationEvents2 = res.body.length;
-                        
 
                         chai
                           .request(server)

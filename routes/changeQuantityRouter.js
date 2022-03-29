@@ -15,9 +15,8 @@ changeQuantityRouter.post("/", async (req, res) => {
   //query to update part to new value
   var changeQuantityTableQuery = `UPDATE part_quantity SET quantity = ${new_quantity} WHERE internal_part_number ='${internal_part_number}' AND location_id =${location_id} AND status_id =${status_id};`;
   //query to update parts table
-  var changeTotalQuantityTableQuery = `UPDATE parts SET total_quantity = ${
-    total_quantity + new_quantity - old_quantity
-  } WHERE internal_part_number ='${internal_part_number}';`;
+  var changeTotalQuantityTableQuery = `UPDATE parts SET total_quantity = ${total_quantity + new_quantity - old_quantity
+    } WHERE internal_part_number ='${internal_part_number}';`;
   //check parts table for an entry
   var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = '${internal_part_number}';`;
 
@@ -42,14 +41,14 @@ changeQuantityRouter.post("/", async (req, res) => {
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
-    
+
     today = mm + '/' + dd + '/' + yyyy + '/' + strTime;
-    
+
     let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',1,'${today}','','Quantity changed') returning log_id;`
     let log_id = await pool.query(loggingQuery);
-  
+
     let eventQuery = `insert into quantity_change_events values(${log_id.rows[0].log_id},1,${new_quantity - old_quantity});`
     await pool.query(eventQuery);
 

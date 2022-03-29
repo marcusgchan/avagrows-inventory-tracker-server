@@ -137,12 +137,12 @@ app.use(
   queryForConversionTotalQuantity
 );
 app.use("/api/wip", wipRouter);
-app.use("/api/queryForEventConvertRouter",queryForEventConvertRouter);
-app.use("/api/queryForLogRouter",queryForLogRouter);
-app.use("/api/queryForAddEventRouter",queryForAddEventRouter);
-app.use("/api/queryForDeleteEventsRouter",queryForDeleteEventsRouter);
-app.use("/api/queryForEventLocationRouter",queryForEventLocationRouter);
-app.use("/api/queryForEventQuantityRouter",queryForEventQuantityRouter);
+app.use("/api/queryForEventConvertRouter", queryForEventConvertRouter);
+app.use("/api/queryForLogRouter", queryForLogRouter);
+app.use("/api/queryForAddEventRouter", queryForAddEventRouter);
+app.use("/api/queryForDeleteEventsRouter", queryForDeleteEventsRouter);
+app.use("/api/queryForEventLocationRouter", queryForEventLocationRouter);
+app.use("/api/queryForEventQuantityRouter", queryForEventQuantityRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));

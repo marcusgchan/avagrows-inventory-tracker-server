@@ -6,14 +6,14 @@ queryPartsQuantityRouter.get("/", (req, res) => {
   var queryPartsQuantityQuery = "SELECT * FROM part_quantity;";
 
   pool.query(queryPartsQuantityQuery, (error, result) => {
-    if (error) {  
+    if (error) {
       console.log(error);
       res.status(200).end();
-      
+
     }
     var results = result.rows;
     res.json(results);
-    
+
   });
 });
 

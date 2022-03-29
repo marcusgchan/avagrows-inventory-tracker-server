@@ -7,11 +7,11 @@ const pool = require("../db");
 
 
 editPartCategoryRouter.post("/", (req, res) => {
-  let{ 
-  new_part_category_id,
-   part_id,
-   part_category_name,
-  }=req.body
+  let {
+    new_part_category_id,
+    part_id,
+    part_category_name,
+  } = req.body
   var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_id = ${new_part_category_id}, part_id = '${part_id}', part_category_name = '${part_category_name}' WHERE part_id = '${part_id}';`;
 
   pool.query(editPartCategoryTableQuery, (error, result) => {

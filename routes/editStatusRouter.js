@@ -5,13 +5,13 @@ const pool = require("../db");
 
 editStatusRouter.post("/", (req, res) => {
   /*  Edits an entry in the statuses table with the updated information provided by the user.  */
-let{ 
+  let {
     status_id,
- log_id,
- status_name,
- note,
- oldstatus_id,
-}=req.body
+    log_id,
+    status_name,
+    note,
+    oldstatus_id,
+  } = req.body
 
   var editStatusTableQuery = `UPDATE statuses SET status_id=${status_id},log_id=${log_id},status_name = '${status_name}',note='${note}' WHERE status_id = ${oldstatus_id};`;
 

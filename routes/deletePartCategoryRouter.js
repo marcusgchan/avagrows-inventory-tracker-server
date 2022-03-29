@@ -6,12 +6,10 @@ const pool = require("../db");
     If there are, this function does not allow the user to delete the category information entry.
     Otherwise, the entry is removed. */
 
-
-
 deletePartCategoryRouter.post("/", async (req, res) => {
-  var part_id=req.body.part_id;
-  var part_category_id=req.body.part_category_id;
-  var part_category_name=req.body.part_category_name;
+  var part_id = req.body.part_id;
+  var part_category_id = req.body.part_category_id;
+  var part_category_name = req.body.part_category_name;
   var deletePartCategoryTableQuery = `DELETE FROM part_categories WHERE part_id = '${part_id}' and part_category_name = '${part_category_name}' and part_category_id = ${part_category_id};`;
   var checkIfInUse = `SELECT * FROM part_quantity WHERE internal_part_number ='${part_id}';`;
   var results;
