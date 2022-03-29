@@ -4,8 +4,6 @@ const pool = require("../db");
 
 /*  Edits an entry in the part category table with the updated information provided by the user.  */
 
-
-
 editPartCategoryRouter.post("/", (req, res) => {
   let {
     new_part_category_id,
