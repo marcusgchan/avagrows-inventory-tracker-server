@@ -4,8 +4,6 @@ const pool = require("../db");
 
 /*  Edits an entry in the locations table with the updated information provided by the user.  */
 
-
-
 editPartsRouter.post("/", (req, res) => {
   let {
     internal_part_number,
