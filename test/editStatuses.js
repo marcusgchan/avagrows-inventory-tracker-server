@@ -8,7 +8,7 @@ describe("statuses_edit", function () {
   it("should see if statuses are editied", function (done) {
     chai
       .request(server)
-      .post("/api/editStatusRouter")
+      .post("/api/statuses/edit")
       .send({
         status_id: 10,
         log_id: 10,
@@ -19,11 +19,11 @@ describe("statuses_edit", function () {
       .end(function (error, res) {
         chai
           .request(server)
-          .get("/api/queryForEditStatusRouter")
+          .get("/api/testing/queryForEditStatusRouter")
           .end(function (err, res) {
             var num2 = res.body.length;
             console.log(num2);
-            (num2).should.equal(1);
+            num2.should.equal(1);
             done();
           });
       });

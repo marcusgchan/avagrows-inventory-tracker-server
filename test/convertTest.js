@@ -8,7 +8,7 @@ describe("convert_parts", function () {
   it("should see if parts are converted and total quantity is changed", function (done) {
     chai
       .request(server)
-      .get("/api/queryForConversionQuantity")
+      .get("/api/testing/queryForConversionQuantity")
 
       .end(function (err, res) {
         var num = res.body;
@@ -17,13 +17,13 @@ describe("convert_parts", function () {
         }
         chai
           .request(server)
-          .get("/api/queryForConversionTotalQuantity")
+          .get("/api/testing/queryForConversionTotalQuantity")
           .end(function (err, res) {
-            console.log("hi")
+            console.log("hi");
             var numTotal = res.body;
             chai
               .request(server)
-              .post("/api/Convert")
+              .post("/api/inventory/convert")
               .send({
                 conversionQuantity: conversionQuantity,
                 internal_part_number: "BYTE",
@@ -32,35 +32,45 @@ describe("convert_parts", function () {
                 res.body.convertPossible.should.equal(true);
                 chai
                   .request(server)
-                  .get("/api/queryForConversionQuantity")
+                  .get("/api/testing/queryForConversionQuantity")
                   .end(function (err, res) {
                     var num2 = res.body;
                     for (var i = 0; i < 5; i++) {
                       //console.log(num2[i].quantity);
                       if (num2[i].internal_part_number != "BYTE") {
-                        (num[i].quantity - num2[i].quantity).should.equal(1 * conversionQuantity);
+                        (num[i].quantity - num2[i].quantity).should.equal(
+                          1 * conversionQuantity
+                        );
                       } else {
-                        (num2[i].quantity - num[i].quantity).should.equal(1 * conversionQuantity);
+                        (num2[i].quantity - num[i].quantity).should.equal(
+                          1 * conversionQuantity
+                        );
                       }
                     }
                     chai
                       .request(server)
-                      .get("/api/queryForConversionTotalQuantity")
+                      .get("/api/testing/queryForConversionTotalQuantity")
                       .end(function (err, res) {
                         var numTotal2 = res.body;
 
                         for (var i = 0; i < 5; i++) {
                           if (num2[i].internal_part_number != "BYTE")
-                            (numTotal[i].total_quantity - numTotal2[i].total_quantity).should.equal(1 * conversionQuantity);
+                            (
+                              numTotal[i].total_quantity -
+                              numTotal2[i].total_quantity
+                            ).should.equal(1 * conversionQuantity);
                           else
-                            (numTotal2[i].total_quantity - numTotal[i].total_quantity).should.equal(1 * conversionQuantity);
+                            (
+                              numTotal2[i].total_quantity -
+                              numTotal[i].total_quantity
+                            ).should.equal(1 * conversionQuantity);
                         }
 
                         done();
-                      })
+                      });
                   });
               });
-          })
+          });
       });
   });
 });

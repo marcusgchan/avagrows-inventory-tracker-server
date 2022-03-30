@@ -6,17 +6,16 @@ chai.use(chaiHttp);
 
 describe("parts_add_remove", function () {
   it("should see if part is added", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForGetPartsRouter")
+      .get("/api/parts/")
       .end(function (err, res) {
         var num = res.body.length;
         console.log(num);
 
         chai
           .request(server)
-          .post("/api/addPartsRouter")
+          .post("/api/parts/add")
           .send({
             internal_part_number: "testEntry",
             part_name: "test",
@@ -30,10 +29,9 @@ describe("parts_add_remove", function () {
             category_id: 1,
           })
           .end(function (error, res) {
-
             chai
               .request(server)
-              .get("/api/queryForGetPartsRouter")
+              .get("/api/parts/")
               .end(function (err, res) {
                 var num2 = res.body.length;
                 console.log(num2);
@@ -45,25 +43,23 @@ describe("parts_add_remove", function () {
   });
 
   it("should see if part is deleted from table", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForGetPartsRouter")
+      .get("/api/parts/")
       .end(function (err, res) {
         var num = res.body.length;
         console.log(num);
 
         chai
           .request(server)
-          .post("/api/deletePartsRouter")
+          .post("/api/parts/delete")
           .send({
             internal_part_number: "testEntry",
           })
           .end(function (error, res) {
-
             chai
               .request(server)
-              .get("/api/queryForGetPartsRouter")
+              .get("/api/parts/")
               .end(function (err, res) {
                 var num2 = res.body.length;
                 console.log(num2);

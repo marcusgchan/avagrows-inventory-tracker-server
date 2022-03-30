@@ -6,27 +6,25 @@ chai.use(chaiHttp);
 
 describe("part_catagories_add_remove", function () {
   it("should see if part is added", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForGetPartCategoryRouter")
+      .get("/api/testing/queryForGetPartCategoryRouter")
       .end(function (err, res) {
         var num = res.body.length;
         console.log(num);
 
         chai
           .request(server)
-          .post("/api/addPartCategoryRouter")
+          .post("/api/categories/add")
           .send({
             part_category_id: 1,
             part_id: "test",
             part_category_name: "raw material",
           })
           .end(function (error, res) {
-
             chai
               .request(server)
-              .get("/api/queryForGetPartCategoryRouter")
+              .get("/api/testing/queryForGetPartCategoryRouter")
               .end(function (err, res) {
                 var num2 = res.body.length;
                 console.log(num2);
@@ -38,28 +36,27 @@ describe("part_catagories_add_remove", function () {
   });
 
   it("should see if status is deleted from table", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForGetPartCategoryRouter")
+      .get("/api/testing/queryForGetPartCategoryRouter")
       .end(function (err, res) {
         var num = res.body.length;
         console.log(num);
-        
+
         chai
           .request(server)
-          .post("/api/deletePartCategoryRouter")
+          .post("/api/categories/delete")
           .send({
             part_id: "test",
             part_category_id: 1,
-            part_category_name: "raw material"
+            part_category_name: "raw material",
           })
           .end(function (error, res) {
-            console.log(res.body)
+            console.log(res.body);
 
             chai
               .request(server)
-              .get("/api/queryForGetPartCategoryRouter")
+              .get("/api/testing/queryForGetPartCategoryRouter")
               .end(function (err, res) {
                 var num2 = res.body.length;
                 console.log(num2);
@@ -68,5 +65,5 @@ describe("part_catagories_add_remove", function () {
               });
           });
       });
-  })
+  });
 });

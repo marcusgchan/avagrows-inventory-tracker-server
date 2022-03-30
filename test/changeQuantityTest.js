@@ -12,20 +12,20 @@ describe("part_quantity_change", function () {
 
     chai
       .request(server)
-      .get("/api/queryForTestTotalQuantityRouter")
+      .get("/api/testing/queryForTestTotalQuantityRouter")
       .end(function (err, res) {
         totalQuantity = res.body;
         console.log(totalQuantity);
 
         chai //get request for total quantity
           .request(server)
-          .get("/api/queryForPartsQuantityQuantityRouter")
+          .get("/api/testing/queryForPartsQuantityQuantityRouter")
           .end(function (err, res) {
             var oldQuantity = res.body;
             console.log(oldQuantity);
             chai
               .request(server)
-              .post("/api/changeQuantity")
+              .post("/api/inventory/changeQuantity")
               .send({
                 old_quantity: oldQuantity,
                 new_quantity: quantity,
@@ -37,14 +37,14 @@ describe("part_quantity_change", function () {
               .end(function (error, res) {
                 chai
                   .request(server)
-                  .get("/api/queryForPartsQuantityQuantityRouter")
+                  .get("/api/testing/queryForPartsQuantityQuantityRouter")
                   .end(function (err, res) {
                     var newQuantity = res.body;
                     console.log(newQuantity);
                     (newQuantity).should.equal(quantity);
                     chai
                       .request(server)
-                      .get("/api/queryForTestTotalQuantityRouter")
+                      .get("/api/testing/queryForTestTotalQuantityRouter")
                       .end(function (err, res) {
                         totalQuantity2 = res.body;
 

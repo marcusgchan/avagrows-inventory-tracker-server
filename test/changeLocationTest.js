@@ -10,10 +10,9 @@ chai.use(chaiHttp);
 
 describe("part_location_change", function () {
   it("should see if quantity is correct in both locations", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForLocationQuantityRouter")
+      .get("/api/testing/queryForLocationQuantityRouter")
       .end(function (err, res) {
         initQuantity1 = res.body;
         quantity = initQuantity1 - 1;
@@ -21,13 +20,13 @@ describe("part_location_change", function () {
 
         chai
           .request(server)
-          .get("/api/queryForLocationQuantity2Router")
+          .get("/api/testing/queryForLocationQuantity2Router")
           .end(function (err, res) {
             var initQuantity2 = res.body;
             console.log(initQuantity2);
             chai
               .request(server)
-              .post("/api/moveLocation")
+              .post("/api/inventory/moveLocation")
               .send({
                 internal_part_number: "LIGHTSTAND",
                 location_id: 1,
@@ -40,20 +39,22 @@ describe("part_location_change", function () {
               .end(function (error, res) {
                 chai
                   .request(server)
-                  .get("/api/queryForLocationQuantityRouter")
+                  .get("/api/testing/queryForLocationQuantityRouter")
                   .end(function (err, res) {
                     finalQuantity1 = res.body;
                     console.log(finalQuantity1);
 
                     chai
                       .request(server)
-                      .get("/api/queryForLocationQuantity2Router")
+                      .get("/api/testing/queryForLocationQuantity2Router")
                       .end(function (err, res) {
                         var finalQuantity2 = res.body;
                         moveAmount = initQuantity1 - quantity;
                         console.log(finalQuantity2);
-                        (moveAmount).should.equal(initQuantity1 - finalQuantity1);
-                        (initQuantity2 + moveAmount).should.equal(finalQuantity2);
+                        moveAmount.should.equal(initQuantity1 - finalQuantity1);
+                        (initQuantity2 + moveAmount).should.equal(
+                          finalQuantity2
+                        );
                         done();
                       });
                   });

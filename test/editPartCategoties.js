@@ -8,7 +8,7 @@ describe("part_categories_edit", function () {
   it("should see if part_categories are editied", function (done) {
     chai
       .request(server)
-      .post("/api/editPartCategoryRouter")
+      .post("/api/categories/edit")
       .send({
         new_part_category_id: 4,
         part_id: "MTL0139",
@@ -17,11 +17,11 @@ describe("part_categories_edit", function () {
       .end(function (error, res) {
         chai
           .request(server)
-          .get("/api/queryForEditPartCategoryRouter")
+          .get("/api/testing/queryForEditPartCategoryRouter")
           .end(function (err, res) {
             var num2 = res.body.length;
             console.log(num2);
-            (num2).should.equal(1);
+            num2.should.equal(1);
             done();
           });
       });

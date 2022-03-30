@@ -8,7 +8,7 @@ describe("parts_edit", function () {
   it("should see if parts are editied", function (done) {
     chai
       .request(server)
-      .post("/api/editPartsRouter")
+      .post("/api/parts/edit")
       .send({
         internal_part_number: "test",
         old_internal_part_number: "MTL0148",
@@ -25,14 +25,14 @@ describe("parts_edit", function () {
       .end(function (error, res) {
         chai
           .request(server)
-          .get("/api/queryForEditPartsRouter")
+          .get("/api/testing/queryForEditPartsRouter")
           .end(function (err, res) {
             var num2 = res.body.length;
             console.log(num2);
-            (num2).should.equal(1);
+            num2.should.equal(1);
             chai
               .request(server)
-              .post("/api/editPartsRouter")
+              .post("/api/parts/edit")
               .send({
                 internal_part_number: "MTL0148",
                 old_internal_part_number: "test",
@@ -48,7 +48,7 @@ describe("parts_edit", function () {
               })
               .end(function (error, res) {
                 done();
-              })
+              });
           });
       });
   });

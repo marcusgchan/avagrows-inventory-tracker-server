@@ -1,13 +1,8 @@
 const deletePartsRouter = require("express").Router();
 const pool = require("../db");
 
-/*  Deletes a part from the part_quantity table. 
-    First checks if the internal part number is in the main parts table,
-    throws an error if a match is found,
-    otherwise deletes all entries with that part number. */
-
-var partsQuantityRows;
 deletePartsRouter.post("/", async (req, res) => {
+  var partsQuantityRows;
   var internal_part_number = req.body.internal_part_number;
   try {
     var partsQuantityQuery = `SELECT * FROM part_quantity WHERE internal_part_number = '${internal_part_number}';`;

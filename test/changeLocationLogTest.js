@@ -8,29 +8,28 @@ chai.use(chaiHttp);
 
 describe("part_location_change", function () {
   it("should see if quantity is correct in both locations", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForLocationQuantityRouter")
+      .get("/api/testing/queryForLocationQuantityRouter")
       .end(function (err, res) {
         initQuantity1 = res.body;
         quantity = initQuantity1 - 1;
 
         chai
           .request(server)
-          .get("/api/queryForLogRouter")
+          .get("/api/testing/queryForLogRouter")
           .end(function (err, res) {
             var numLogs = res.body.length;
 
             chai
               .request(server)
-              .get("/api/queryForEventLocationRouter")
+              .get("/api/testing/queryForEventLocationRouter")
               .end(function (err, res) {
                 var numRelocationEvents = res.body.length;
 
                 chai
                   .request(server)
-                  .post("/api/moveLocation")
+                  .post("/api/inventory/moveLocation")
                   .send({
                     internal_part_number: "LIGHTSTAND",
                     location_id: 1,
@@ -41,20 +40,21 @@ describe("part_location_change", function () {
                     new_quantity: quantity,
                   })
                   .end(function (error, res) {
-
                     chai
                       .request(server)
-                      .get("/api/queryForEventLocationRouter")
+                      .get("/api/testing/queryForEventLocationRouter")
                       .end(function (err, res) {
                         var numRelocationEvents2 = res.body.length;
 
                         chai
                           .request(server)
-                          .get("/api/queryForLogRouter")
+                          .get("/api/testing/queryForLogRouter")
                           .end(function (err, res) {
                             var numLogs2 = res.body.length;
                             (numLogs2 - numLogs).should.equal(1);
-                            (numRelocationEvents2 - numRelocationEvents).should.equal(1);
+                            (
+                              numRelocationEvents2 - numRelocationEvents
+                            ).should.equal(1);
                             done();
                           });
                       });

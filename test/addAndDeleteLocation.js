@@ -6,17 +6,16 @@ chai.use(chaiHttp);
 
 describe("location_add_remove", function () {
   it("should see if location is added and total quantity is changed", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForGetLocationRouter")
+      .get("/api/locations/")
       .end(function (err, res) {
         var num = res.body.length;
         console.log(num);
 
         chai
           .request(server)
-          .post("/api/addLocationRouter")
+          .post("/api/locations/add")
           .send({
             location_id: 10,
             log_id: 10,
@@ -25,10 +24,9 @@ describe("location_add_remove", function () {
             postal_code: "test",
           })
           .end(function (error, res) {
-
             chai
               .request(server)
-              .get("/api/queryForGetLocationRouter")
+              .get("/api/locations/")
               .end(function (err, res) {
                 var num2 = res.body.length;
                 console.log(num2);
@@ -40,23 +38,22 @@ describe("location_add_remove", function () {
   });
 
   it("should see if part is deleted from table", function (done) {
-
     chai
       .request(server)
-      .get("/api/queryForGetLocationRouter")
+      .get("/api/locations/")
       .end(function (err, res) {
         var num = res.body.length;
         console.log(num);
         chai
           .request(server)
-          .post("/api/deleteLocationRouter")
+          .post("/api/locations/delete")
           .send({
             location_id: 10,
           })
           .end(function (error, res) {
             chai
               .request(server)
-              .get("/api/queryForGetLocationRouter")
+              .get("/api/locations/")
               .end(function (err, res) {
                 var num2 = res.body.length;
                 console.log(num2);
@@ -65,5 +62,5 @@ describe("location_add_remove", function () {
               });
           });
       });
-  })
+  });
 });

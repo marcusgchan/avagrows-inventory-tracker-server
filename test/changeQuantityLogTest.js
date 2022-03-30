@@ -10,32 +10,32 @@ describe("part_quantity_change_log", function () {
   it("should see if the log for change quantity is added to both the log and quantity event tables", function (done) {
     chai
       .request(server)
-      .get("/api/queryForTestTotalQuantityRouter")
+      .get("/api/testing/queryForTestTotalQuantityRouter")
       .end(function (err, res) {
         totalQuantity = res.body;
         console.log(totalQuantity);
 
         chai //get request for total quantity
           .request(server)
-          .get("/api/queryForPartsQuantityQuantityRouter")
+          .get("/api/testing/queryForPartsQuantityQuantityRouter")
           .end(function (err, res) {
             var oldQuantity = res.body;
             console.log(oldQuantity);
 
             chai
               .request(server)
-              .get("/api/queryForLogRouter")
+              .get("/api/testing/queryForLogRouter")
               .end(function (err, res) {
                 var numLogs = res.body.length;
                 chai
                   .request(server)
-                  .get("/api/queryForEventQuantityRouter")
+                  .get("/api/testing/queryForEventQuantityRouter")
                   .end(function (err, res) {
                     var numQuantityEvents = res.body.length;
 
                     chai
                       .request(server)
-                      .post("/api/changeQuantity")
+                      .post("/api/inventory/changeQuantity")
                       .send({
                         old_quantity: oldQuantity,
                         new_quantity: quantity,
@@ -47,12 +47,12 @@ describe("part_quantity_change_log", function () {
                       .end(function (error, res) {
                         chai
                           .request(server)
-                          .get("/api/queryForLogRouter")
+                          .get("/api/testing/queryForLogRouter")
                           .end(function (err, res) {
                             var numLogs2 = res.body.length;
                             chai
                               .request(server)
-                              .get("/api/queryForEventQuantityRouter")
+                              .get("/api/testing/queryForEventQuantityRouter")
                               .end(function (err, res) {
                                 var numQuantityEvents2 = res.body.length;
                                 (numLogs2 - numLogs).should.equal(1);
