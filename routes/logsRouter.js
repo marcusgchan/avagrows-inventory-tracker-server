@@ -1,8 +1,8 @@
-const logRouter = require("express").Router();
+const logsRouter = require("express").Router();
 const pool = require("../db");
 
 //gets all the rows for the inventory table
-logRouter.get("/", async(req, res) => {
+logsRouter.get("/", async(req, res) => {
   var rowsTableQuery0 ="SELECT logs.log_id, logs.event_type_name, logs.part_id, quantity_change_events.quantity_changed, '' AS old_location, '' AS new_location, '' AS old_status, '' AS new_status, '' AS convert_flag, logs.date_time, people.name FROM logs INNER JOIN quantity_change_events ON logs.log_id = quantity_change_events.log_id INNER JOIN people ON logs.user_id = people.user_id;"
   var rowsTableQuery1 ="SELECT logs.log_id, logs.event_type_name, logs.part_id, add_events.quantity_added, '' AS old_location, '' AS new_location, '' AS old_status, '' AS new_status, '' AS convert_flag, logs.date_time, people.name FROM logs INNER JOIN add_events ON logs.log_id = add_events.log_id INNER JOIN people ON logs.user_id = people.user_id;"
   var rowsTableQuery2 ="SELECT logs.log_id, logs.event_type_name, logs.part_id, convert_events.quantity_changed, '' AS old_location, '' AS new_location, '' AS old_status, '' AS new_status, convert_events.convert_flag, logs.date_time, people.name FROM logs INNER JOIN convert_events ON logs.log_id = convert_events.log_id INNER JOIN people ON logs.user_id = people.user_id;"
@@ -12,15 +12,10 @@ logRouter.get("/", async(req, res) => {
   try{
       console.log("0")
   var res0= await pool.query(rowsTableQuery0);
-  console.log(res0.rows);
   var res1= await pool.query(rowsTableQuery1);
-  console.log("0")
   var res2= await pool.query(rowsTableQuery2);
-  console.log("0")
   var res3= await pool.query(rowsTableQuery3);
-  console.log("0")
   var res4= await pool.query(rowsTableQuery4);
-  console.log("0")
 
   var res5=res0.rows.concat(res1.rows,res2.rows,res3.rows,res4.rows)
   //console.log(res5);
@@ -29,4 +24,4 @@ logRouter.get("/", async(req, res) => {
     return res.status(400).send(e);
 }
 });
-module.exports = logRouter;
+module.exports = logsRouter;

@@ -14,7 +14,7 @@ const categoriesRouter = require("./routes/categoriesRouter");
 const peopleRouter = require("./routes/peopleRouter");
 const wipRouter = require("./routes/wipRouter");
 const testingRouter = require("./routes/testingRouter");
-const logRouter = require("./routes/logRouter");
+const logsRouter = require("./routes/logsRouter");
 
 // const queryForLogRouter = require("./routes/queryForLogRouter");
 
@@ -131,7 +131,7 @@ app.use("/api/wip", wipRouter);
 
 // routes used for testing
 app.use("/api/testing", testingRouter);
-app.use("/api/logRouter",logRouter);
+app.use("/api/log", logsRouter);
 // app.use("/api/queryPartsQuantityRouter", queryPartsQuantityRouter);
 // app.use(
 //   "/api/queryForTestTotalQuantityRouter",
