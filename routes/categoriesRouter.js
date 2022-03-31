@@ -49,16 +49,6 @@ categoriesRouter.post("/add", async (req, res) => {
   var checkForDuplicates = `SELECT * FROM part_categories WHERE part_category_id = ${part_category_id} AND part_id = '${part_id}' AND part_category_name = '${part_category_name}';`;
   var checkIfPartExists = `SELECT * FROM parts WHERE internal_part_number = '${part_id}';`;
 
-  // Query to check if part is a duplicate in the part category table.
-  var duplicateResult = await pool.query(checkForDuplicates);
-  if (duplicateResult.rows.length >= 1) {
-    var returnQuery = `SELECT * from part_categories`;
-    var resultRet = await pool.query(returnQuery);
-
-    let resultsRet = { rows: resultRet.rows, canAdd: false };
-
-    return res.status(200).json(resultsRet);
-  }
 
   // Query to check if part exists in the parts table before adding to the part category table.
   var partExistsResult = await pool.query(checkIfPartExists);
@@ -66,16 +56,26 @@ categoriesRouter.post("/add", async (req, res) => {
     var returnQuery = `SELECT * from parts`;
     var resultRet = await pool.query(returnQuery);
 
-    let resultsRet = { rows: resultRet.rows, canAdd: false };
+    let resultsRet = { rows: resultRet.rows, canAdd: false, partExists: false };
 
     return res.status(200).json(resultsRet);
   }
 
+  // Query to check if part is a duplicate in the part category table.
+  var duplicateResult = await pool.query(checkForDuplicates);
+  if (duplicateResult.rows.length >= 1) {
+    var returnQuery = `SELECT * from part_categories`;
+    var resultRet = await pool.query(returnQuery);
+
+    let resultsRet = { rows: resultRet.rows, canAdd: false, partExists: true };
+
+    return res.status(200).json(resultsRet);
+  }
   // Query to add part category into table
   await pool.query(addPartCategoryTableQuery);
 
   var results = await pool.query(`SELECT * FROM part_categories`);
-  let resultsRet = { rows: results.rows, canAdd: true };
+  let resultsRet = { rows: results.rows, canAdd: true, partExists:true };
   return res.status(200).json(resultsRet);
 });
 
