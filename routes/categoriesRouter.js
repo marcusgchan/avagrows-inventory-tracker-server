@@ -1,6 +1,17 @@
 const categoriesRouter = require("express").Router();
 const pool = require("../db");
 
+function categoryID(name){
+  if(name=='raw material'){
+    return 1;
+  } else if(name=='work in progress'){
+    return 2;
+  } else if (name=='finished good'){
+    return 3;
+  } else{
+    return 0;
+  }
+}
 categoriesRouter.get("/distinct", (req, res) => {
   //select all parts from part category table
   var categoryTableQuery =
@@ -32,8 +43,9 @@ categoriesRouter.get("/", (req, res) => {
 
 /*  Edits an entry in the part category table with the updated information provided by the user.  */
 categoriesRouter.post("/edit", async (req, res) => {
-  let { new_part_category_id, part_id, new_part_category_name } = req.body;
-  var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_id = ${new_part_category_id}, part_category_name = '${new_part_category_name}' WHERE part_id = '${part_id}';`;
+  let {  part_id, part_category_name } = req.body;
+  var new_part_category_id=categoryID(part_category_name);
+  var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_id = ${new_part_category_id}, part_category_name = '${part_category_name}' WHERE part_id = '${part_id}';`;
 
   await pool.query(editPartCategoryTableQuery);
   var resultRet = await pool.query(`SELECT * from part_categories`);
@@ -44,7 +56,8 @@ categoriesRouter.post("/edit", async (req, res) => {
 
 //add to part category table
 categoriesRouter.post("/add", async (req, res) => {
-  let { part_category_id, part_id, part_category_name } = req.body;
+  let {  part_id, part_category_name } = req.body;
+  var part_category_id=categoryID(part_category_name);
   var addPartCategoryTableQuery = `INSERT into part_categories values(${part_category_id},'${part_id}','${part_category_name}');`;
   var checkForDuplicates = `SELECT * FROM part_categories WHERE part_category_id = ${part_category_id} AND part_id = '${part_id}' AND part_category_name = '${part_category_name}';`;
   var checkIfPartExists = `SELECT * FROM parts WHERE internal_part_number = '${part_id}';`;
