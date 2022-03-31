@@ -80,7 +80,6 @@ partsRouter.post("/delete", async (req, res) => {
 partsRouter.post("/edit", async (req, res) => {
   let {
     internal_part_number,
-    old_internal_part_number,
     part_name,
     manufacture_name,
     manufacture_part_number,
@@ -103,7 +102,7 @@ partsRouter.post("/edit", async (req, res) => {
     return res.status(200).json(resultsRet);
   }
 
-  var editPartsTableQuery = `UPDATE parts SET internal_part_number = '${internal_part_number}', part_name ='${part_name}',manufacturer_name='${manufacture_name}',manufacturer_part_number='${manufacture_part_number}',item_description='${item_description}',unit_price='${unit_price}',line_price='${line_price}',lead_time='${lead_time}',category_id=${category_id} where internal_part_number='${old_internal_part_number}';`;
+  var editPartsTableQuery = `UPDATE parts SET part_name ='${part_name}',manufacturer_name='${manufacture_name}',manufacturer_part_number='${manufacture_part_number}',item_description='${item_description}',unit_price='${unit_price}',line_price='${line_price}',lead_time='${lead_time}',category_id=${category_id} where internal_part_number='${old_internal_part_number}';`;
   await pool.query(editPartsTableQuery)
 
   var results = await pool.query(`SELECT * FROM parts`)
