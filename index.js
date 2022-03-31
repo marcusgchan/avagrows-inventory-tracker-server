@@ -11,6 +11,7 @@ const partsRouter = require("./routes/partsRouter");
 const locationsRouter = require("./routes/locationsRouter");
 const statusesRouter = require("./routes/statusesRouter");
 const categoriesRouter = require("./routes/categoriesRouter");
+const peopleRouter = require("./routes/peopleRouter");
 const wipRouter = require("./routes/wipRouter");
 const testingRouter = require("./routes/testingRouter");
 
@@ -120,6 +121,9 @@ app.use("/api/categories", categoriesRouter);
 // app.use("/api/editPartCategoryRouter", editPartCategoryRouter);
 // app.use("/api/addPartCategoryRouter", addPartCategoryRouter);
 // app.use("/api/deletePartCategoryRouter", deletePartCategoryRouter);
+
+// routes for the user table in table management
+app.use("/api/people", peopleRouter);
 
 // routes for wip table to be used in inventory
 app.use("/api/wip", wipRouter);
