@@ -13,11 +13,10 @@ addPartsRouter.post("/", (req, res) => {
     unit_price,
     line_price,
     lead_time,
-    total_quantity,
     category_id,
   } = req.body;
   //query to insert into parts table
-  var addPartsTableQuery = `INSERT into parts values('${internal_part_number}','${part_name}','${manufacture_name}','${manufacture_part_number}','${item_description}','${unit_price}','${line_price}','${lead_time}',${total_quantity},${category_id});`;
+  var addPartsTableQuery = `INSERT into parts values('${internal_part_number}','${part_name}','${manufacture_name}','${manufacture_part_number}','${item_description}','${unit_price}','${line_price}','${lead_time}',0,${category_id});`;
 
   pool.query(addPartsTableQuery, (error, result) => {
     if (error) {

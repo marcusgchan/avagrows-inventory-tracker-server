@@ -15,7 +15,7 @@ partsRouter.get("/", (req, res) => {
 });
 
 //add part to parts table
-partsRouter.post("/add", (req, res) => {
+partsRouter.post("/add", async (req, res) => {
   let {
     internal_part_number,
     part_name,
@@ -25,42 +25,59 @@ partsRouter.post("/add", (req, res) => {
     unit_price,
     line_price,
     lead_time,
-    total_quantity,
     category_id,
   } = req.body;
-  //query to insert into parts table
-  var addPartsTableQuery = `INSERT into parts values('${internal_part_number}','${part_name}','${manufacture_name}','${manufacture_part_number}','${item_description}','${unit_price}','${line_price}','${lead_time}',${total_quantity},${category_id});`;
 
-  pool.query(addPartsTableQuery, (error, result) => {
-    if (error) {
-      res.status(400).json("error");
-      return;
-    }
+  // Query to insert into parts table
+  var addPartsTableQuery = `INSERT into parts values('${internal_part_number}','${part_name}','${manufacture_name}','${manufacture_part_number}','${item_description}','${unit_price}','${line_price}','${lead_time}',0,${category_id});`;
+  var checkForDuplicates = `SELECT * FROM parts where internal_part_number = '${internal_part_number}'`
 
-    res.status(200).json("done");
-  });
+  var duplicateResult = await pool.query(checkForDuplicates)
+  if (duplicateResult.rows.length >= 1) {
+    var returnQuery = `SELECT * from parts`;
+    var resultRet = await pool.query(returnQuery)
+
+    let resultsRet = { rows: resultRet.rows, canAdd: false };
+
+    return res.status(200).json(resultsRet);
+  }
+
+  await pool.query(addPartsTableQuery)
+
+  var results = await pool.query(`SELECT * FROM parts`)
+  let resultsRet = { rows: results.rows, canAdd: true };
+
+  return res.status(200).json(resultsRet);
 });
 
 partsRouter.post("/delete", async (req, res) => {
-  var partsQuantityRows;
+
   var internal_part_number = req.body.internal_part_number;
   try {
     var partsQuantityQuery = `SELECT * FROM part_quantity WHERE internal_part_number = '${internal_part_number}';`;
     const result = await pool.query(partsQuantityQuery);
-    partsQuantityRows = result.rows;
+    var partsQuantityRows = result.rows;
     if (partsQuantityRows.length > 0) {
-      res.status(400).json("error");
+      var results = await pool.query(`SELECT * FROM parts`)
+      let resultsRet = { rows: results.rows, canDelete: false };
+  
+      return res.status(200).json(resultsRet);
     }
 
     var addStatusTableQuery = `DELETE FROM parts WHERE internal_part_number = '${internal_part_number}';`;
 
     await pool.query(addStatusTableQuery);
+    var results = await pool.query(`SELECT * FROM parts`)
+    let resultsRet = { rows: results.rows, canDelete: true };
+  
+    return res.status(200).json(resultsRet);
+
   } catch (e) {
-    res.status(400).json(e);
+    return res.status(400).json(e);
   }
 });
 
-partsRouter.post("/edit", (req, res) => {
+partsRouter.post("/edit", async (req, res) => {
   let {
     internal_part_number,
     old_internal_part_number,
@@ -71,19 +88,27 @@ partsRouter.post("/edit", (req, res) => {
     unit_price,
     line_price,
     lead_time,
-    total_quantity,
     category_id,
   } = req.body;
 
-  var editPartsTableQuery = `UPDATE parts SET internal_part_number = '${internal_part_number}', part_name ='${part_name}',manufacturer_name='${manufacture_name}',manufacturer_part_number='${manufacture_part_number}',item_description='${item_description}',unit_price='${unit_price}',line_price='${line_price}',lead_time='${lead_time}',total_quantity=${total_quantity},category_id=${category_id} where internal_part_number='${old_internal_part_number}';`;
+  var checkForDuplicates = `SELECT * FROM parts where internal_part_number = '${internal_part_number}'`
 
-  pool.query(editPartsTableQuery, (error, result) => {
-    if (error) {
-      res.status(400).json("error");
-    }
+  var duplicateResult = await pool.query(checkForDuplicates)
+  if (duplicateResult.rows.length >= 1) {
+    var returnQuery = `SELECT * from parts`;
+    var resultRet = await pool.query(returnQuery)
 
-    res.status(200).json("done");
-  });
+    let resultsRet = { rows: resultRet.rows, canEdit: false };
+
+    return res.status(200).json(resultsRet);
+  }
+
+  var editPartsTableQuery = `UPDATE parts SET internal_part_number = '${internal_part_number}', part_name ='${part_name}',manufacturer_name='${manufacture_name}',manufacturer_part_number='${manufacture_part_number}',item_description='${item_description}',unit_price='${unit_price}',line_price='${line_price}',lead_time='${lead_time}',category_id=${category_id} where internal_part_number='${old_internal_part_number}';`;
+  await pool.query(editPartsTableQuery)
+
+  var results = await pool.query(`SELECT * FROM parts`)
+  let resultsRet = { rows: results.rows, canEdit: true };
+  return res.status(200).json(resultsRet)
 });
 
 partsRouter.post("/checkPartExists", async (req, res) => {
