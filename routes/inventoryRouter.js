@@ -61,7 +61,7 @@ inventoryRouter.post("/changeQuantity", async (req, res) => {
 
     today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
 
-    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',1,'${today}','','Quantity changed') returning log_id;`;
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',1,'${today}','','Quantity changed') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
 
     let eventQuery = `insert into quantity_change_events values(${
@@ -119,7 +119,7 @@ inventoryRouter.post("/delete", async (req, res) => {
 
     today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
 
-    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',5,'${today}','','Deleted Part') returning log_id;`;
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',5,'${today}','','Deleted Part') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
 
     let eventQuery = `insert into delete_events values(${log_id.rows[0].log_id},5,'${internal_part_number}',${quantity});`;
@@ -192,7 +192,7 @@ inventoryRouter.post("/addParts", async (req, res) => {
 
       today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
 
-      let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',4,'${today}','','Added Part') returning log_id;`;
+      let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',4,'${today}','','Added Part') returning log_id;`;
       let log_id = await pool.query(loggingQuery);
 
       let eventQuery = `insert into add_events values(${log_id.rows[0].log_id},4,'${internal_part_number}',${quantity});`;
@@ -282,7 +282,7 @@ inventoryRouter.post("/moveLocation", async (req, res) => {
       var strTime = hours + ":" + minutes + " " + ampm;
 
       today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
-      let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}',3,'${today}','','Relocated Part') returning log_id;`;
+      let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',3,'${today}','','Relocated Part') returning log_id;`;
       let log_id = await pool.query(loggingQuery);
       let eventQuery = `insert into relocation_events values(${log_id.rows[0].log_id},3,${moveAmount},${location_id},${new_location_id},${new_status_id},'${internal_part_number}');`;
       await pool.query(eventQuery);
@@ -431,7 +431,7 @@ inventoryRouter.post("/convert", async (req, res) => {
 
     today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
 
-    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}', 2 ,'${today}','','Convert') returning log_id;`;
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}', 2 ,'${today}','','Convert') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
 
     let eventQuery = `insert into convert_events values(${log_id.rows[0].log_id},2,${conversionQuantity},1);`;
@@ -575,7 +575,7 @@ inventoryRouter.post("/unconvert", async (req, res) => {
 
     today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
 
-    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),'${user_id}','${internal_part_number}', 2 ,'${today}','','Unconvert') returning log_id;`;
+    let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}', 2 ,'${today}','','Unconvert') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
 
     let eventQuery = `insert into convert_events values(${log_id.rows[0].log_id},2,${conversionQuantity},0);`;

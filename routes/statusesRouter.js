@@ -15,38 +15,69 @@ statusRouter.get("/", (req, res) => {
 });
 
 //add status to table
-statusRouter.post("/add", (req, res) => {
-  var status_id;
-  var log_id;
-  var status_name;
-  var note;
+statusRouter.post("/add", async (req, res) => {
+  
+  
+  var status_name=req.body.status_name;
+  var note=req.body.note;
   //insert into status table query
-  var addStatusTableQuery = `INSERT into statuses values(${status_id},${log_id},'${status_name}','${note}';`;
+  var addStatusTableQuery = `INSERT into statuses values(DEFAULT,'${status_name}','${note}');`;
+  var checkStatusTableQuery=`select * from statuses where status_name = '${status_name}';`
+  try{
+    var result= await pool.query(checkStatusTableQuery);
+    if (result.rows.length >= 1) {
+      var returnQuery = `SELECT * from statuses;`
+      var resultRet = await pool.query(returnQuery)
 
-  pool.query(addStatusTableQuery, (error, result) => {
-    if (error) {
-      return;
+      let resultsRet = { rows: resultRet.rows, canAdd: false };
+    
+      return res.status(200).json(resultsRet);
+
+      
+  }
+  
+  await pool.query(addStatusTableQuery)
+  
+  var returnQuery = `SELECT * from statuses;`
+        var resultFromReturnQuery = await pool.query(returnQuery)
+        let results = { rows: resultFromReturnQuery.rows, canAdd: true };
+        return res.status(200).json(results);
+    } catch (e) {
+        res.status(400).send(e);
     }
-
-    res.send(`done`);
-  });
 });
 
-statusRouter.post("/edit", (req, res) => {
-  var status_id;
-  var log_id;
-  var status_name;
-  var note;
-  var oldstatus_id;
-  var addStatusTableQuery = `UPDATE statuses SET status_id=${status_id},log_id=${log_id},status_name = '${status_name}',note='${note}' WHERE status_id = ${oldstatus_id};`;
+statusRouter.post("/edit", async (req, res) => {
+  var status_id=req.body.status_id;
+  var status_name=req.body.status_name;
+  var note=req.body.note;
+  var checkStatusTableQuery=`select * from statuses where status_name = '${status_name}';`
+  try{
+    var result= await pool.query(checkStatusTableQuery);
+    if (result.rows.length >= 1) {
+      var returnQuery = `SELECT * from statuses;`
+      var resultRet = await pool.query(returnQuery)
 
-  pool.query(addStatusTableQuery, (error, result) => {
-    if (error) {
-      return;
-    }
+      let resultsRet = { rows: resultRet.rows, canEdit: false };
+      
+      return res.status(200).json(resultsRet);
 
-    res.send(`done`);
-  });
+      
+  }
+  
+  var addStatusTableQuery = `UPDATE statuses SET status_name = '${status_name}',note='${note}' WHERE status_id = ${status_id};`;
+
+  await pool.query(addStatusTableQuery);
+  var returnQuery = `SELECT * from statuses;`
+      var resultRet = await pool.query(returnQuery)
+
+      let resultsRet = { rows: resultRet.rows, canEdit: true };
+     
+      return res.status(200).json(resultsRet);
+
+}catch(e){
+  res.status(400).send(e);
+}
 });
 
 /*  Deletes a status from the statuses table.
@@ -61,12 +92,25 @@ statusRouter.post("/delete", async (req, res) => {
     var partsQuantityQuery = `SELECT * FROM part_quantity WHERE status_id = ${status_id};`;
     const result = await pool.query(partsQuantityQuery);
     partsQuantityRows = result.rows;
-    if (partsQuantityRows.length > 0) res.status(400).end();
+    if (partsQuantityRows.length > 0) {
+
+      var returnQuery = `SELECT * from statuses;`
+      var resultRet = await pool.query(returnQuery)
+
+      let resultsRet = { rows: resultRet.rows, canDelete: false };
+      
+      return res.status(200).json(resultsRet);
+    }
 
     var addStatusTableQuery = `DELETE FROM statuses WHERE status_id = ${status_id};`;
 
     await pool.query(addStatusTableQuery);
-    res.status(200).end();
+    var returnQuery = `SELECT * from statuses;`
+      var resultRet = await pool.query(returnQuery)
+
+      let resultsRet = { rows: resultRet.rows, canDelete: true };
+      
+      return res.status(200).json(resultsRet);
   } catch (e) {
     console.log(e);
     res.status(400).json("error");

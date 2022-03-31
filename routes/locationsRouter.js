@@ -30,48 +30,91 @@ locationRouter.post("/delete", async (req, res) => {
 
     if (results.length < 1) {
       await pool.query(deleteLocationTableQuery);
-      res.status(200).json("done");
+      var returnQuery = `SELECT * from locations;`
+            var resultRet = await pool.query(returnQuery)
+
+            let resultsRet = { rows: resultRet.rows, canDelete: true };
+            return res.status(200).json(resultsRet);
     } else {
-      console.log("This location is still in use!");
+      var returnQuery = `SELECT * from locations;`
+            var resultRet = await pool.query(returnQuery)
+  
+            let resultsRet = { rows: resultRet.rows, canDelete: false };
+            return res.status(200).json(resultsRet);
     }
   } catch (e) {
-    console.log(e);
-    return;
+    return res.status(400).json(e);
+    
   }
 });
 
 /*  Edits an entry in the locations table with the updated information provided by the user.  */
-locationRouter.post("/edit", (req, res) => {
+locationRouter.post("/edit", async(req, res) => {
   let {
-    old_location_id,
-    new_location_id,
-    log_id,
+    location_id,
     location_name,
     address,
     postal_code,
   } = req.body;
+  try{
+  var isDuplicateQuery=`select * from locations where location_name = '${location_name}';`
+  
+  var result = await pool.query(isDuplicateQuery)
 
-  var editLocationTableQuery = `UPDATE locations SET location_id = ${new_location_id}, log_id = ${log_id}, location_name = '${location_name}', address = '${address}', postal_code = '${postal_code}' WHERE location_id = ${old_location_id};`;
+  if (result.rows.length >= 1) {
+      var returnQuery = `SELECT * from locations;`
+      var resultRet = await pool.query(returnQuery)
 
-  pool.query(editLocationTableQuery, (error, result) => {
-    if (error) {
-      res.status(400).json("error");
-    }
-    res.status(200).json("done");
-  });
+      let resultsRet = { rows: resultRet.rows, canEdit: false };
+      return res.status(200).json(resultsRet);
+
+
+  }
+  var editLocationTableQuery = `UPDATE locations SET  location_name = '${location_name}', address = '${address}', postal_code = '${postal_code}' WHERE location_id = ${location_id};`;
+
+  await pool.query(editLocationTableQuery)
+
+  var returnQuery = `SELECT * from locations;`
+            var resultRet = await pool.query(returnQuery)
+
+            let resultsRet = { rows: resultRet.rows, canEdit: true };
+            return res.status(200).json(resultsRet);
+
+}catch(e){
+  return res.status(400).json(e);
+}
 });
 
 // add to location table
-locationRouter.post("/add", (req, res) => {
-  var { location_id, log_id, location_name, address, postal_code } = req.body;
-  var addLocationTableQuery = `INSERT into locations values(${location_id},${log_id},'${location_name}','${address}', '${postal_code}');`;
+locationRouter.post("/add", async (req, res) => {
+  var {  location_name, address, postal_code } = req.body;
+  try{
+  var addLocationTableQuery = `INSERT into locations values(DEFAULT,'${location_name}','${address}', '${postal_code}');`;
+  var isDuplicateQuery=`select * from locations where location_name = '${location_name}';`
+  
+  var result = await pool.query(isDuplicateQuery)
+
+  if (result.rows.length >= 1) {
+      var returnQuery = `SELECT * from locations;`
+      var resultRet = await pool.query(returnQuery)
+
+      let resultsRet = { rows: resultRet.rows, canAdd: false };
+      return res.status(200).json(resultsRet);
+
+
+  }
+
   //query to add location into database
-  pool.query(addLocationTableQuery, (error, result) => {
-    if (error) {
-      return;
-    }
-    res.status(400).json("done");
-  });
+  await pool.query(addLocationTableQuery);
+  var returnQuery = `SELECT * from locations;`
+            var resultRet = await pool.query(returnQuery)
+
+            let resultsRet = { rows: resultRet.rows, canAdd: true };
+            return res.status(200).json(resultsRet);
+
+}catch(e){
+  return res.status(400).json(e);
+}
 });
 
 module.exports = locationRouter;
