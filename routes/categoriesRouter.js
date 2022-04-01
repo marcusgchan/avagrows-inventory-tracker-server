@@ -2,11 +2,11 @@ const categoriesRouter = require("express").Router();
 const pool = require("../db");
 
 function categoryID(name) {
-  if (name == "Raw Material") {
+  if (name === "Raw Material") {
     return 1;
-  } else if (name == "Work In Progress") {
+  } else if (name === "Work In Progress") {
     return 2;
-  } else if (name == "Finished Good") {
+  } else if (name === "Finished Good") {
     return 3;
   } else {
     return 0;
