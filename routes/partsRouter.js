@@ -27,7 +27,7 @@ partsRouter.post("/add", async (req, res) => {
     lead_time,
     category_id,
   } = req.body;
-
+  try{
   // Query to insert into parts table
   var addPartsTableQuery = `INSERT into parts values('${internal_part_number}','${part_name}','${manufacture_name}','${manufacture_part_number}','${item_description}','${unit_price}','${line_price}','${lead_time}',0,${category_id});`;
   var checkForDuplicates = `SELECT * FROM parts where internal_part_number = '${internal_part_number}'`
@@ -48,6 +48,9 @@ partsRouter.post("/add", async (req, res) => {
   let resultsRet = { rows: results.rows, canAdd: true };
 
   return res.status(200).json(resultsRet);
+}catch(e){
+  return res.status(400).send(e)
+}
 });
 
 partsRouter.post("/delete", async (req, res) => {
@@ -89,7 +92,7 @@ partsRouter.post("/edit", async (req, res) => {
     lead_time,
     category_id,
   } = req.body;
-
+    try{
   var checkForDuplicates = `SELECT * FROM parts where internal_part_number = '${internal_part_number}'`
 
   var duplicateResult = await pool.query(checkForDuplicates)
@@ -108,6 +111,9 @@ partsRouter.post("/edit", async (req, res) => {
   var results = await pool.query(`SELECT * FROM parts`)
   let resultsRet = { rows: results.rows, canEdit: true };
   return res.status(200).json(resultsRet)
+} catch(e){
+  return res.status(400).send(e)
+}
 });
 
 partsRouter.post("/checkPartExists", async (req, res) => {
