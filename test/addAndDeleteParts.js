@@ -25,7 +25,6 @@ describe("parts_add_remove", function () {
             unit_price: "test",
             line_price: "test",
             lead_time: "test",
-            total_quantity: 10,
             category_id: 1,
           })
           .end(function (error, res) {

@@ -33,6 +33,7 @@ describe("part_quantity_change", function () {
                 internal_part_number: "2MP04",
                 location_id: 1,
                 status_id: 1,
+                user_id:1,
               })
               .end(function (error, res) {
                 chai

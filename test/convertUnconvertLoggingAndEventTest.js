@@ -23,6 +23,7 @@ describe("convert_unconvert_Logging_Events", function () {
               .send({
                 conversionQuantity: conversionQuantity,
                 internal_part_number: "BYTE",
+                user_id: 1,
               })
               .end(function (error, res) {
                 chai
@@ -62,6 +63,7 @@ describe("convert_unconvert_Logging_Events", function () {
               .send({
                 conversionQuantity: conversionQuantity,
                 internal_part_number: "BYTE",
+                user_id: 1,
               })
               .end(function (error, res) {
                 chai

@@ -80,14 +80,14 @@ testingRouter.get("/queryForLocationQuantity2Router", (req, res) => {
 
 testingRouter.get("/queryForEditLocation", (req, res) => {
   //select all parts from part quantity table
-  var queryPartsQuery = "SELECT * FROM locations where location_id = 4";
+  var queryPartsQuery = "SELECT * FROM locations where location_id = (select max(location_id) from locations);";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {
       console.log(error);
       res.status(200).end();
     }
-    var results = result.rows;
+    var results = result;
     res.json(results);
   });
 });
@@ -102,7 +102,7 @@ testingRouter.get("/queryForEditPartCategoryRouter", (req, res) => {
       console.log(error);
       res.status(200).end();
     }
-    var results = result.rows;
+    var results = result;
     res.json(results);
   });
 });
@@ -110,28 +110,28 @@ testingRouter.get("/queryForEditPartCategoryRouter", (req, res) => {
 testingRouter.get("/queryForEditPartsRouter", (req, res) => {
   //select all parts from part quantity table
   var queryPartsQuery =
-    "SELECT * FROM parts where internal_part_number = 'test'";
+    "SELECT * FROM parts where internal_part_number = 'MTL0148'";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {
       console.log(error);
       res.status(200).end();
     }
-    var results = result.rows;
+    var results = result;
     res.json(results);
   });
 });
 
 testingRouter.get("/queryForEditStatusRouter", (req, res) => {
   //select all parts from part quantity table
-  var queryPartsQuery = "SELECT * from statuses where status_id = 10";
+  var queryPartsQuery = "SELECT * FROM statuses where status_id = (select max(status_id) from statuses);";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {
       console.log(error);
       res.status(200).end();
     }
-    var results = result.rows;
+    var results = result;
     res.json(results);
   });
 });
@@ -249,5 +249,47 @@ testingRouter.get("/queryForEventQuantityRouter", (req, res) => {
     res.json(results);
   });
 });
+testingRouter.get("/queryForLocationsID", (req, res) => {
+  //select all events from relocation events table.
+  var queryForEventQuantityQuery = "select max(location_id) from locations;";
+
+  pool.query(queryForEventQuantityQuery, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(200).end();
+    }
+    var results = result.rows[0].max;
+    res.json(results);
+  });
+});
+testingRouter.get("/queryForStatusesID", (req, res) => {
+  //select all events from relocation events table.
+  var queryForEventQuantityQuery = "select max(status_id) from statuses;";
+
+  pool.query(queryForEventQuantityQuery, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(200).end();
+    }
+    var results = result.rows[0].max;
+    res.json(results);
+  });
+});
+testingRouter.get("/queryPartsQuantityRouter", (req, res) => {
+  //select all parts from part quantity table
+  var queryPartsQuantityQuery = "SELECT * FROM part_quantity;";
+
+  pool.query(queryPartsQuantityQuery, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(200).end();
+
+    }
+    var results = result.rows;
+    res.json(results);
+
+  });
+});
+
 
 module.exports = testingRouter;

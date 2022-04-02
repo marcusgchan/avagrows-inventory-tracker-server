@@ -8,11 +8,14 @@ describe("location_edit", function () {
   it("should see if location is edited", function (done) {
     chai
       .request(server)
+      .get("/api/testing/queryForLocationsID")
+      .end(function (error, res) {
+        var location_id=res.body
+    chai
+      .request(server)
       .post("/api/locations/edit")
       .send({
-        old_location_id: 3,
-        new_location_id: 4,
-        log_id: 10,
+        location_id: location_id,
         location_name: "test",
         address: "test",
         postal_code: "test",
@@ -22,11 +25,12 @@ describe("location_edit", function () {
           .request(server)
           .get("/api/testing/queryForEditLocation")
           .end(function (err, res) {
-            var num2 = res.body.length;
+            var num2 = res.body.rows[0].location_name;
             console.log(num2);
-            num2.should.equal(1);
+            num2.should.equal("test");
             done();
           });
       });
+    });
   });
 });

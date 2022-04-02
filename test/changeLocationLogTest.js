@@ -6,7 +6,7 @@ var initQuantity1;
 var quantity;
 chai.use(chaiHttp);
 
-describe("part_location_change", function () {
+describe("part_location_change_log", function () {
   it("should see if quantity is correct in both locations", function (done) {
     chai
       .request(server)
@@ -38,6 +38,7 @@ describe("part_location_change", function () {
                     new_status_id: 1,
                     old_quantity: initQuantity1,
                     new_quantity: quantity,
+                    user_id: 1,
                   })
                   .end(function (error, res) {
                     chai

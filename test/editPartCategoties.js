@@ -10,7 +10,6 @@ describe("part_categories_edit", function () {
       .request(server)
       .post("/api/categories/edit")
       .send({
-        new_part_category_id: 4,
         part_id: "MTL0139",
         part_category_name: "test",
       })
@@ -19,9 +18,9 @@ describe("part_categories_edit", function () {
           .request(server)
           .get("/api/testing/queryForEditPartCategoryRouter")
           .end(function (err, res) {
-            var num2 = res.body.length;
+            var num2 = res.body.rows[0].part_category_name;
             console.log(num2);
-            num2.should.equal(1);
+            num2.should.equal("test");
             done();
           });
       });

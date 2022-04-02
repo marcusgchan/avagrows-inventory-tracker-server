@@ -24,9 +24,10 @@ describe("unconvert_parts", function () {
               .send({
                 conversionQuantity: conversionQuantity,
                 internal_part_number: "BYTE",
+                user_id: 1,
               })
               .end(function (error, res) {
-                res.body.convertPossible.should.equal(true);
+                res.body.unconvertPossible.should.equal(true);
                 chai
                   .request(server)
                   .get("/api/testing/queryForConversionQuantity")
@@ -48,17 +49,21 @@ describe("unconvert_parts", function () {
                       .get("/api/testing/queryForConversionTotalQuantity")
                       .end(function (err, res) {
                         var numTotal2 = res.body;
+                        //console.log(numTotal);
+                        //console.log("-------------");
+                        //console.log(numTotal2);
                         for (var i = 0; i < 5; i++) {
                           if (num2[i].internal_part_number == "BYTE")
                             (
                               numTotal[i].total_quantity -
                               numTotal2[i].total_quantity
                             ).should.equal(1 * conversionQuantity);
-                          else
+                          else{
                             (
                               numTotal2[i].total_quantity -
                               numTotal[i].total_quantity
                             ).should.equal(1 * conversionQuantity);
+                          }
                         }
                         done();
                       });

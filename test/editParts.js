@@ -10,8 +10,8 @@ describe("parts_edit", function () {
       .request(server)
       .post("/api/parts/edit")
       .send({
-        internal_part_number: "test",
-        old_internal_part_number: "MTL0148",
+        
+        internal_part_number: "MTL0148",
         part_name: "test",
         manufacture_name: "test",
         manufacture_part_number: "test",
@@ -19,7 +19,6 @@ describe("parts_edit", function () {
         unit_price: "test",
         line_price: "test",
         lead_time: "test",
-        total_quantity: 100,
         category_id: 1,
       })
       .end(function (error, res) {
@@ -27,15 +26,14 @@ describe("parts_edit", function () {
           .request(server)
           .get("/api/testing/queryForEditPartsRouter")
           .end(function (err, res) {
-            var num2 = res.body.length;
+            var num2 = res.body.rows[0].part_name;
             console.log(num2);
-            num2.should.equal(1);
+            num2.should.equal("test");
             chai
               .request(server)
               .post("/api/parts/edit")
               .send({
                 internal_part_number: "MTL0148",
-                old_internal_part_number: "test",
                 part_name: "Metals",
                 manufacture_name: "Mr.Song",
                 manufacture_part_number: "MTL0148",
@@ -43,7 +41,7 @@ describe("parts_edit", function () {
                 unit_price: "$0.92",
                 line_price: "0.92",
                 lead_time: "11",
-                total_quantity: 100,
+                
                 category_id: 1,
               })
               .end(function (error, res) {

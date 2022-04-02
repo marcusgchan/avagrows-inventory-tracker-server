@@ -41,6 +41,7 @@ describe("add_delete_logging_events", function () {
                     quantity: quantity,
                     note: "",
                     total_quantity: totalQuantity,
+                    user_id: 1,
                   })
                   .end(function (error, res) {
                     chai
@@ -87,6 +88,7 @@ describe("add_delete_logging_events", function () {
                 internal_part_number: "2MP04",
                 location_id: 1,
                 status_id: 5,
+                user_id:1,
               })
               .end(function (error, res) {
                 chai

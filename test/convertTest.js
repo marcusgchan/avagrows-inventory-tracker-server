@@ -27,6 +27,7 @@ describe("convert_parts", function () {
               .send({
                 conversionQuantity: conversionQuantity,
                 internal_part_number: "BYTE",
+                user_id:1,
               })
               .end(function (error, res) {
                 res.body.convertPossible.should.equal(true);

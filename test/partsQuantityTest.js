@@ -18,7 +18,7 @@ describe("part_quantity", function () {
 
         chai //get request for total quantity
           .request(server)
-          .get("/api/inventory/")
+          .get("/api/testing/queryPartsQuantityRouter")
 
           .end(function (err, res) {
             var num = res.body.length;
@@ -33,11 +33,17 @@ describe("part_quantity", function () {
                 quantity: quantity,
                 note: "",
                 total_quantity: totalQuantity,
+                user_id: 1,
               })
               .end(function (error, res) {
                 chai
                   .request(server)
-                  .get("/api/inventory/")
+                  .get("/api/inventory")
+                  .end(function (err, res) {
+                    console.log("inventory: "+ res.body.length)
+                chai
+                  .request(server)
+                  .get("/api/testing/queryPartsQuantityRouter")
                   .end(function (err, res) {
                     var num2 = res.body.length;
                     console.log(num2);
@@ -53,6 +59,7 @@ describe("part_quantity", function () {
                       });
                   });
               });
+            });
           });
       });
   });
@@ -67,7 +74,7 @@ describe("part_quantity", function () {
 
         chai
           .request(server)
-          .get("/api/inventory/")
+          .get("/api/testing/queryPartsQuantityRouter")
           .end(function (err, res) {
             var num = res.body.length;
             console.log(num);
@@ -78,11 +85,12 @@ describe("part_quantity", function () {
                 internal_part_number: "2MP04",
                 location_id: 1,
                 status_id: 5,
+                user_id: 1,
               })
               .end(function (error, res) {
                 chai
                   .request(server)
-                  .get("/api/inventory/")
+                  .get("/api/testing/queryPartsQuantityRouter")
                   .end(function (err, res) {
                     var num2 = res.body.length;
                     console.log(num2);
@@ -100,4 +108,5 @@ describe("part_quantity", function () {
           });
       });
   });
+  
 });

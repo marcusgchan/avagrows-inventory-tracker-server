@@ -17,8 +17,6 @@ describe("statuses_add_remove", function () {
           .request(server)
           .post("/api/statuses/add")
           .send({
-            status_id: 9,
-            log_id: 10,
             status_name: "test",
             note: "test",
           })
@@ -45,22 +43,28 @@ describe("statuses_add_remove", function () {
         console.log(num);
         chai
           .request(server)
-          .post("/api/statuses/delete")
-          .send({
-            status_id: 9,
-          })
-          .end(function (error, res) {
+          .get("/api/testing/queryForStatusesID")
+          .end(function (err, res) {
+            var ID=res.body
             chai
               .request(server)
-              .get("/api/statuses/")
-              .end(function (err, res) {
-                var num2 = res.body.length;
-                console.log(num2);
-                (num - num2).should.equal(1);
+              .post("/api/statuses/delete")
+              .send({
+                status_id: ID,
+              })
+              .end(function (error, res) {
+                chai
+                  .request(server)
+                  .get("/api/statuses/")
+                  .end(function (err, res) {
+                    var num2 = res.body.length;
+                    console.log(num2);
+                    (num - num2).should.equal(1);
 
-                done();
+                    done();
+                  });
               });
           });
+        });
       });
   });
-});

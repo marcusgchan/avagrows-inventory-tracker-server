@@ -17,7 +17,6 @@ describe("part_catagories_add_remove", function () {
           .request(server)
           .post("/api/categories/add")
           .send({
-            part_category_id: 1,
             part_id: "test",
             part_category_name: "raw material",
           })
@@ -35,7 +34,7 @@ describe("part_catagories_add_remove", function () {
       });
   });
 
-  it("should see if status is deleted from table", function (done) {
+  it("should see if category is deleted from table", function (done) {
     chai
       .request(server)
       .get("/api/testing/queryForGetPartCategoryRouter")
@@ -48,8 +47,7 @@ describe("part_catagories_add_remove", function () {
           .post("/api/categories/delete")
           .send({
             part_id: "test",
-            part_category_id: 1,
-            part_category_name: "raw material",
+            
           })
           .end(function (error, res) {
             console.log(res.body);
