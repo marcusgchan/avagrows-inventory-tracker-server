@@ -1,14 +1,14 @@
 const categoriesRouter = require("express").Router();
 const pool = require("../db");
 
-function categoryID(name){
-  if(name=='raw material'){
+function categoryID(name) {
+  if (name === "Raw Material") {
     return 1;
-  } else if(name=='work in progress'){
+  } else if (name === "Work In Progress") {
     return 2;
-  } else if (name=='finished good'){
+  } else if (name === "Finished Good") {
     return 3;
-  } else{
+  } else {
     return 0;
   }
 }
@@ -43,61 +43,68 @@ categoriesRouter.get("/", (req, res) => {
 
 /*  Edits an entry in the part category table with the updated information provided by the user.  */
 categoriesRouter.post("/edit", async (req, res) => {
-  try{
-  let {  part_id, part_category_name } = req.body;
-  var new_part_category_id=categoryID(part_category_name);
-  var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_id = ${new_part_category_id}, part_category_name = '${part_category_name}' WHERE part_id = '${part_id}';`;
+  try {
+    let { part_id, part_category_name } = req.body;
+    var new_part_category_id = categoryID(part_category_name);
+    var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_id = ${new_part_category_id}, part_category_name = '${part_category_name}' WHERE part_id = '${part_id}';`;
 
-  await pool.query(editPartCategoryTableQuery);
-  var resultRet = await pool.query(`SELECT * from part_categories`);
+    await pool.query(editPartCategoryTableQuery);
+    var resultRet = await pool.query(`SELECT * from part_categories`);
 
-  let resultsRet = { rows: resultRet.rows, canEdit: true };
-  return res.status(200).json(resultsRet);
-  }catch(e){
-    
-  return res.status(400).send(e);
+    let resultsRet = { rows: resultRet.rows, canEdit: true };
+    return res.status(200).json(resultsRet);
+  } catch (e) {
+    return res.status(400).send(e);
   }
 });
 
 //add to part category table
 categoriesRouter.post("/add", async (req, res) => {
-  let {  part_id, part_category_name } = req.body;
-  var part_category_id=categoryID(part_category_name);
+  let { part_id, part_category_name } = req.body;
+  var part_category_id = categoryID(part_category_name);
   var addPartCategoryTableQuery = `INSERT into part_categories values(${part_category_id},'${part_id}','${part_category_name}');`;
   var checkForDuplicates = `SELECT * FROM part_categories WHERE part_category_id = ${part_category_id} AND part_id = '${part_id}' AND part_category_name = '${part_category_name}';`;
   var checkIfPartExists = `SELECT * FROM parts WHERE internal_part_number = '${part_id}';`;
 
-  try{
-  // Query to check if part exists in the parts table before adding to the part category table.
-  var partExistsResult = await pool.query(checkIfPartExists);
-  if (partExistsResult.rows.length >= 1) {
-    var returnQuery = `SELECT * from parts`;
-    var resultRet = await pool.query(returnQuery);
+  try {
+    // Query to check if part exists in the parts table before adding to the part category table.
+    var partExistsResult = await pool.query(checkIfPartExists);
+    if (partExistsResult.rows.length >= 1) {
+      var returnQuery = `SELECT * from parts`;
+      var resultRet = await pool.query(returnQuery);
 
-    let resultsRet = { rows: resultRet.rows, canAdd: false, partExists: false };
+      let resultsRet = {
+        rows: resultRet.rows,
+        canAdd: false,
+        partExists: false,
+      };
 
+      return res.status(200).json(resultsRet);
+    }
+
+    // Query to check if part is a duplicate in the part category table.
+    var duplicateResult = await pool.query(checkForDuplicates);
+    if (duplicateResult.rows.length >= 1) {
+      var returnQuery = `SELECT * from part_categories`;
+      var resultRet = await pool.query(returnQuery);
+
+      let resultsRet = {
+        rows: resultRet.rows,
+        canAdd: false,
+        partExists: true,
+      };
+
+      return res.status(200).json(resultsRet);
+    }
+    // Query to add part category into table
+    await pool.query(addPartCategoryTableQuery);
+
+    var results = await pool.query(`SELECT * FROM part_categories`);
+    let resultsRet = { rows: results.rows, canAdd: true, partExists: true };
     return res.status(200).json(resultsRet);
+  } catch (e) {
+    return res.status(400).send(e);
   }
-
-  // Query to check if part is a duplicate in the part category table.
-  var duplicateResult = await pool.query(checkForDuplicates);
-  if (duplicateResult.rows.length >= 1) {
-    var returnQuery = `SELECT * from part_categories`;
-    var resultRet = await pool.query(returnQuery);
-
-    let resultsRet = { rows: resultRet.rows, canAdd: false, partExists: true };
-
-    return res.status(200).json(resultsRet);
-  }
-  // Query to add part category into table
-  await pool.query(addPartCategoryTableQuery);
-
-  var results = await pool.query(`SELECT * FROM part_categories`);
-  let resultsRet = { rows: results.rows, canAdd: true, partExists:true };
-  return res.status(200).json(resultsRet);
-}catch(e){
-  return res.status(400).send(e);
-}
 });
 
 /*  Deletes a part from the part_categories table. 
@@ -109,22 +116,22 @@ categoriesRouter.post("/delete", async (req, res) => {
   var part_id = req.body.part_id;
   var deletePartCategoryTableQuery = `DELETE FROM part_categories WHERE part_id = '${part_id}';`;
   var checkIfInUse = `SELECT * FROM part_quantity WHERE internal_part_number ='${part_id}';`;
-  try{
-  var partInUse = await pool.query(checkIfInUse);
-  if (partInUse.rows.length >= 1) {
+  try {
+    var partInUse = await pool.query(checkIfInUse);
+    if (partInUse.rows.length >= 1) {
+      var results = await pool.query(`SELECT * FROM part_categories`);
+      let resultsRet = { rows: results.rows, canDelete: false };
+      return res.status(200).json(resultsRet);
+    }
+
+    await pool.query(deletePartCategoryTableQuery);
+
     var results = await pool.query(`SELECT * FROM part_categories`);
-    let resultsRet = { rows: results.rows, canDelete: false };
+    let resultsRet = { rows: results.rows, canDelete: true };
     return res.status(200).json(resultsRet);
+  } catch (e) {
+    return res.status(400).send(e);
   }
-
-  await pool.query(deletePartCategoryTableQuery);
-
-  var results = await pool.query(`SELECT * FROM part_categories`);
-  let resultsRet = { rows: results.rows, canDelete: true };
-  return res.status(200).json(resultsRet);
-}catch(e){
-  return res.status(400).send(e);
-}
 });
 
 module.exports = categoriesRouter;
