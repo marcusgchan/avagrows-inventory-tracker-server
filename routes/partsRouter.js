@@ -25,9 +25,9 @@ partsRouter.post("/add", async (req, res) => {
     lead_time,
   } = req.body;
 
-  let category_id = 0;
-  let manufacture_name = "hi";
-  let manufacture_part_number = 1;
+  let category_id = 1;
+  let manufacture_name = null;
+  let manufacture_part_number = null;
   try {
     // Query to insert into parts table
     var addPartsTableQuery = `INSERT into parts values('${internal_part_number}','${part_name}','${manufacture_name}','${manufacture_part_number}','${part_description}','${unit_price}','${line_price}','${lead_time}',0,${category_id});`;
@@ -89,7 +89,7 @@ partsRouter.post("/edit", async (req, res) => {
     lead_time,
   } = req.body;
 
-  let category_id = 0;
+  let category_id = 1;
   let manufacture_name = null;
   let manufacture_part_number = null;
   try {
