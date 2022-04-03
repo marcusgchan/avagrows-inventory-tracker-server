@@ -2,11 +2,11 @@ const categoriesRouter = require("express").Router();
 const pool = require("../db");
 
 function categoryID(name) {
-  if (name === "Raw Material") {
+  if (name === "raw material") {
     return 1;
-  } else if (name === "Work In Progress") {
+  } else if (name === "work in progress") {
     return 2;
-  } else if (name === "Finished Good") {
+  } else if (name === "finished good") {
     return 3;
   } else {
     return 0;
@@ -69,8 +69,8 @@ categoriesRouter.post("/add", async (req, res) => {
   try {
     // Query to check if part exists in the parts table before adding to the part category table.
     var partExistsResult = await pool.query(checkIfPartExists);
-    if (partExistsResult.rows.length >= 1) {
-      var returnQuery = `SELECT * from parts`;
+    if (partExistsResult.rows.length < 1) {
+      var returnQuery = `SELECT * from part_categories`;
       var resultRet = await pool.query(returnQuery);
 
       let resultsRet = {
@@ -78,7 +78,6 @@ categoriesRouter.post("/add", async (req, res) => {
         canAdd: false,
         partExists: false,
       };
-
       return res.status(200).json(resultsRet);
     }
 
