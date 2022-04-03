@@ -63,7 +63,7 @@ categoriesRouter.post("/add", async (req, res) => {
   let { part_id, part_category_name } = req.body;
   var part_category_id = categoryID(part_category_name);
   var addPartCategoryTableQuery = `INSERT into part_categories values(${part_category_id},'${part_id}','${part_category_name}');`;
-  var checkForDuplicates = `SELECT * FROM part_categories WHERE part_category_id = ${part_category_id} AND part_id = '${part_id}' AND part_category_name = '${part_category_name}';`;
+  var checkForDuplicates = `SELECT * FROM part_categories WHERE part_id = '${part_id}';`;
   var checkIfPartExists = `SELECT * FROM parts WHERE internal_part_number = '${part_id}';`;
 
   try {
@@ -71,7 +71,7 @@ categoriesRouter.post("/add", async (req, res) => {
     var partExistsResult = await pool.query(checkIfPartExists);
     if (partExistsResult.rows.length < 1) {
       var returnQuery = `SELECT * from part_categories`;
-      var resultRet = await pool.query(returnQuery);
+      let resultRet = await pool.query(returnQuery);
 
       let resultsRet = {
         rows: resultRet.rows,
@@ -85,7 +85,7 @@ categoriesRouter.post("/add", async (req, res) => {
     var duplicateResult = await pool.query(checkForDuplicates);
     if (duplicateResult.rows.length >= 1) {
       var returnQuery = `SELECT * from part_categories`;
-      var resultRet = await pool.query(returnQuery);
+      let resultRet = await pool.query(returnQuery);
 
       let resultsRet = {
         rows: resultRet.rows,
@@ -98,7 +98,7 @@ categoriesRouter.post("/add", async (req, res) => {
     // Query to add part category into table
     await pool.query(addPartCategoryTableQuery);
 
-    var results = await pool.query(`SELECT * FROM part_categories`);
+    let results = await pool.query(`SELECT * FROM part_categories`);
     let resultsRet = { rows: results.rows, canAdd: true, partExists: true };
     return res.status(200).json(resultsRet);
   } catch (e) {
