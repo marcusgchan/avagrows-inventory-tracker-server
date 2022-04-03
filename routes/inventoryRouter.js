@@ -156,9 +156,6 @@ inventoryRouter.post("/addParts", async (req, res) => {
     user_id,
   } = req.body;
 
-  // console.log(quantity);
-  // console.log(total_quantity);
-
   //query to insert into parts quantity table
   let addNewPartQuantity = `INSERT INTO part_quantity values('${internal_part_number}', '${location_id}', '${status_id}', '${quantity}', '${note}', DEFAULT);`;
   //query to check for dublicates in table
@@ -183,7 +180,8 @@ inventoryRouter.post("/addParts", async (req, res) => {
     if (results.length == 0) {
       await pool.query(addNewPartQuantity);
 
-      let updatedQuantity = total_quantity + Number(quantity);
+      let updatedQuantity = Number(total_quantity) + Number(quantity);
+
       //update the total quantity in the parts table
       let addNewPartTotalQuantity = `UPDATE parts SET total_quantity = '${updatedQuantity}' WHERE internal_part_number = '${internal_part_number}'`;
       await pool.query(addNewPartTotalQuantity);
