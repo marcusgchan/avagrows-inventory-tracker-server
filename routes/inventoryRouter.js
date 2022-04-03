@@ -16,7 +16,6 @@ inventoryRouter.get("/", (req, res) => {
 
 // change quantity of a row (part at a specific location and specific status) in the inventory table
 inventoryRouter.post("/changeQuantity", async (req, res) => {
-  console.log("hi")
   let {
     old_quantity,
     new_quantity,
@@ -33,14 +32,14 @@ inventoryRouter.post("/changeQuantity", async (req, res) => {
   var changeTotalQuantityTableQuery = `UPDATE parts SET total_quantity = ${
     total_quantity + new_quantity - old_quantity
   } WHERE internal_part_number ='${internal_part_number}';`;
-  
+
   //check parts table for an entry
   var checkForEntry = `SELECT * FROM parts WHERE internal_part_number = '${internal_part_number}';`;
 
   try {
     //change quantity to new value
     await pool.query(changeQuantityTableQuery);
-    
+
     // check for entry in parts table
     const result = await pool.query(checkForEntry);
     total_quantity = result.rows[0].total_quantity;
@@ -65,8 +64,10 @@ inventoryRouter.post("/changeQuantity", async (req, res) => {
 
     let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',1,'${today}','','Quantity changed') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
-    
-    let eventQuery = `insert into quantity_change_events values(${log_id.rows[0].log_id},1,${new_quantity - old_quantity});`;
+
+    let eventQuery = `insert into quantity_change_events values(${
+      log_id.rows[0].log_id
+    },1,${new_quantity - old_quantity});`;
     await pool.query(eventQuery);
 
     let rowResults = await pool.query(
@@ -91,11 +92,11 @@ inventoryRouter.post("/delete", async (req, res) => {
   var totalQuantity;
   try {
     const result = await pool.query(partsQuantityQuery);
-    if(result.rows.length===0){
+    if (result.rows.length === 0) {
       let rowResults = await pool.query(
         `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
-  
+
       let result = { rows: rowResults.rows, deletePossible: false };
       return res.status(200).json(result);
     }
@@ -154,6 +155,9 @@ inventoryRouter.post("/addParts", async (req, res) => {
     total_quantity,
     user_id,
   } = req.body;
+
+  // console.log(quantity);
+  // console.log(total_quantity);
 
   //query to insert into parts quantity table
   let addNewPartQuantity = `INSERT INTO part_quantity values('${internal_part_number}', '${location_id}', '${status_id}', '${quantity}', '${note}', DEFAULT);`;
