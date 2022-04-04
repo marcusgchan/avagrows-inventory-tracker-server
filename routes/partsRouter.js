@@ -2,7 +2,8 @@ const partsRouter = require("express").Router();
 const pool = require("../db");
 
 partsRouter.get("/", (req, res) => {
-  var partsTableQuery = "SELECT * FROM parts;";
+  var partsTableQuery =
+    "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id;";
 
   pool.query(partsTableQuery, (error, result) => {
     if (error) {
