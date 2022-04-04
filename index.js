@@ -73,7 +73,8 @@ app.use("/api/wip", wipRouter);
 
 // routes used for testing
 app.use("/api/testing", testingRouter);
-app.use("/api/log", logsRouter);
+
+app.use("/api/logs", logsRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
