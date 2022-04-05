@@ -8,10 +8,15 @@ describe("part_categories_edit", function () {
   it("should see if part_categories are editied", function (done) {
     chai
       .request(server)
+      .get("/api/testing/queryForCategoryID")
+      .end(function (error, res) {
+        var category_id=res.body
+    chai
+      .request(server)
       .post("/api/categories/edit")
       .send({
-        part_id: "MTL0139",
-        part_category_name: "test",
+        part_category_id: category_id,
+        part_category_name: "testName2",
       })
       .end(function (error, res) {
         chai
@@ -20,9 +25,10 @@ describe("part_categories_edit", function () {
           .end(function (err, res) {
             var num2 = res.body.rows[0].part_category_name;
             console.log(num2);
-            num2.should.equal("test");
+            num2.should.equal("testName2");
             done();
           });
       });
   });
+});
 });

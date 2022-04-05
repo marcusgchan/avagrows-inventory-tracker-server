@@ -22,7 +22,7 @@ async function getCategoryID(name) {
 
 partsRouter.get("/", (req, res) => {
   var partsTableQuery =
-    "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id;";
+    "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;";
 
   pool.query(partsTableQuery, (error, result) => {
     if (error) {
@@ -58,7 +58,7 @@ partsRouter.post("/add", async (req, res) => {
 
   if (category_id === 0) {
     var returnQuery =
-      "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id;";
+      "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;";
     var resultRet = await pool.query(returnQuery);
 
     let resultsRet = {
@@ -78,7 +78,7 @@ partsRouter.post("/add", async (req, res) => {
     var duplicateResult = await pool.query(checkForDuplicates);
     if (duplicateResult.rows.length >= 1) {
       var results = await pool.query(
-        `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id`
+        `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;`
       );
       let resultsRet = {
         rows: results.rows,
@@ -92,7 +92,7 @@ partsRouter.post("/add", async (req, res) => {
     await pool.query(addPartsTableQuery);
 
     var results = await pool.query(
-      `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id;`
+      `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;`
     );
     let resultsRet = { rows: results.rows, canAdd: true, categoryExists: true };
 
@@ -110,7 +110,7 @@ partsRouter.post("/delete", async (req, res) => {
     var partsQuantityRows = result.rows;
     if (partsQuantityRows.length > 0) {
       var results = await pool.query(
-        `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id`
+        `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;`
       );
       let resultsRet = {
         rows: results.rows,
@@ -125,7 +125,7 @@ partsRouter.post("/delete", async (req, res) => {
 
     await pool.query(addStatusTableQuery);
     var results = await pool.query(
-      `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id`
+      `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;`
     );
     let resultsRet = {
       rows: results.rows,
@@ -162,7 +162,7 @@ partsRouter.post("/edit", async (req, res) => {
 
   if (category_id === 0) {
     var returnQuery =
-      "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id;";
+      "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;";
     var resultRet = await pool.query(returnQuery);
 
     let resultsRet = {
@@ -179,7 +179,7 @@ partsRouter.post("/edit", async (req, res) => {
     await pool.query(editPartsTableQuery);
 
     var results = await pool.query(
-      `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id`
+      `SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;`
     );
     let resultsRet = {
       rows: results.rows,

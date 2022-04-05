@@ -2,7 +2,7 @@ const locationRouter = require("express").Router();
 const pool = require("../db");
 
 locationRouter.get("/", (req, res) => {
-  var locationTableQuery = "SELECT * FROM locations;";
+  var locationTableQuery = "SELECT * FROM locations order by location_id;";
 
   pool.query(locationTableQuery, (error, result) => {
     if (error) {
@@ -30,13 +30,13 @@ locationRouter.post("/delete", async (req, res) => {
 
     if (results.length < 1) {
       await pool.query(deleteLocationTableQuery);
-      var returnQuery = `SELECT * from locations;`
+      var returnQuery = `SELECT * FROM locations order by location_id;`
       var resultRet = await pool.query(returnQuery)
 
       let resultsRet = { rows: resultRet.rows, canDelete: true };
       return res.status(200).json(resultsRet);
     } else {
-      var returnQuery = `SELECT * from locations;`
+      var returnQuery = `SELECT * FROM locations order by location_id;`
       var resultRet = await pool.query(returnQuery)
 
       let resultsRet = { rows: resultRet.rows, canDelete: false };
@@ -64,7 +64,7 @@ locationRouter.post("/edit", async (req, res) => {
       var result = await pool.query(isDuplicateQuery)
 
       if (result.rows.length >= 1) {
-        var returnQuery = `SELECT * from locations;`
+        var returnQuery = `SELECT * FROM locations order by location_id;`
         var resultRet = await pool.query(returnQuery)
 
         let resultsRet = { rows: resultRet.rows, canEdit: false };
@@ -76,7 +76,7 @@ locationRouter.post("/edit", async (req, res) => {
 
         await pool.query(editLocationTableQuery)
 
-        var returnQuery = `SELECT * from locations;`
+        var returnQuery = `SELECT * FROM locations order by location_id;`
         var resultRet = await pool.query(returnQuery)
 
         let resultsRet = { rows: resultRet.rows, canEdit: true };
@@ -87,7 +87,7 @@ locationRouter.post("/edit", async (req, res) => {
 
     await pool.query(editLocationTableQuery)
 
-    var returnQuery = `SELECT * from locations;`
+    var returnQuery = `SELECT * FROM locations order by location_id;`
     var resultRet = await pool.query(returnQuery)
 
     let resultsRet = { rows: resultRet.rows, canEdit: true };
@@ -108,7 +108,7 @@ locationRouter.post("/add", async (req, res) => {
     var result = await pool.query(isDuplicateQuery)
 
     if (result.rows.length >= 1) {
-      var returnQuery = `SELECT * from locations;`
+      var returnQuery = `SELECT * FROM locations order by location_id;`
       var resultRet = await pool.query(returnQuery)
 
       let resultsRet = { rows: resultRet.rows, canAdd: false };
@@ -119,7 +119,7 @@ locationRouter.post("/add", async (req, res) => {
 
     //query to add location into database
     await pool.query(addLocationTableQuery);
-    var returnQuery = `SELECT * from locations;`
+    var returnQuery = `SELECT * FROM locations order by location_id;`
     var resultRet = await pool.query(returnQuery)
 
     let resultsRet = { rows: resultRet.rows, canAdd: true };

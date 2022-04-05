@@ -19,13 +19,12 @@ describe("parts_add_remove", function () {
           .send({
             internal_part_number: "testEntry",
             part_name: "test",
-            manufacture_name: "test",
-            manufacture_part_number: "test",
-            item_description: "test",
+            part_category_name: "Raw Material",
+            part_description: "test",
             unit_price: "test",
             line_price: "test",
             lead_time: "test",
-            category_id: 1,
+            
           })
           .end(function (error, res) {
             chai

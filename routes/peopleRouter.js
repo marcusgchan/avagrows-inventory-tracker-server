@@ -2,7 +2,7 @@ const peopleRouter = require("express").Router();
 const pool = require("../db");
 
 peopleRouter.get("/", (req, res) => {
-  var peopleTableQuery = "SELECT * FROM people;";
+  var peopleTableQuery = "SELECT * FROM people order by user_id;";
 
   pool.query(peopleTableQuery, (error, result) => {
     if (error) {
@@ -21,7 +21,7 @@ peopleRouter.post("/add", async (req, res) => {
     var result = await pool.query(checkForNameQuery);
 
     if (result.rows.length >= 1) {
-      var returnQuery = `SELECT * from people;`;
+      var returnQuery = `SELECT * FROM people order by user_id;`;
       var resultRet = await pool.query(returnQuery);
 
       let resultsRet = { rows: resultRet.rows, canAdd: false };
@@ -32,7 +32,7 @@ peopleRouter.post("/add", async (req, res) => {
 
     await pool.query(addPeopleTableQuery);
 
-    var returnQuery = `SELECT * from people;`;
+    var returnQuery = `SELECT * FROM people order by user_id;`;
     var resultFromReturnQuery = await pool.query(returnQuery);
     let results = { rows: resultFromReturnQuery.rows, canAdd: true };
     return res.status(200).json(results);
@@ -55,7 +55,7 @@ peopleRouter.post("/edit", async (req, res) => {
       var result = await pool.query(checkForNameQuery);
 
       if (result.rows.length >= 1) {
-        var returnQuery = `SELECT * from people;`;
+        var returnQuery = `SELECT * FROM people order by user_id;`;
         var resultRet = await pool.query(returnQuery);
 
         let resultsRet = { rows: resultRet.rows, canEdit: false };
@@ -63,7 +63,7 @@ peopleRouter.post("/edit", async (req, res) => {
       } else {
         await pool.query(editPeopleTableQuery);
 
-        var returnQuery = `SELECT * from people;`;
+        var returnQuery = `SELECT * FROM people order by user_id;`;
         var result = await pool.query(returnQuery);
 
         let results = { rows: result.rows, canEdit: true };
@@ -72,7 +72,7 @@ peopleRouter.post("/edit", async (req, res) => {
     }
     await pool.query(editPeopleTableQuery);
 
-    var returnQuery = `SELECT * from people;`;
+    var returnQuery = `SELECT * FROM people order by user_id;`;
     var result = await pool.query(returnQuery);
 
     let results = { rows: result.rows, canEdit: true };
@@ -89,7 +89,7 @@ peopleRouter.post("/delete", async (req, res) => {
     var logResults = await pool.query(logQuery);
 
     if (logResults.rows.length >= 1) {
-      var returnQuery = `SELECT * from people;`;
+      var returnQuery = `SELECT * FROM people order by user_id;`;
       var resultRet = await pool.query(returnQuery);
 
       let resultsRet = { rows: resultRet.rows, canDelete: false };
@@ -98,7 +98,7 @@ peopleRouter.post("/delete", async (req, res) => {
     var deletePeopleTableQuery = `delete from people WHERE user_id = ${user_id};`;
 
     await pool.query(deletePeopleTableQuery);
-    var returnQuery = `SELECT * from people;`;
+    var returnQuery = `SELECT * FROM people order by user_id;`;
     var result = await pool.query(returnQuery);
 
     let results = { rows: result.rows, canDelete: true };

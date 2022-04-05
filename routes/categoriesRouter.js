@@ -18,7 +18,7 @@ categoriesRouter.get("/distinct", (req, res) => {
 
 categoriesRouter.get("/", (req, res) => {
   //select all parts from part category table
-  var categoryTableQuery = "SELECT * FROM part_categories;";
+  var categoryTableQuery = "SELECT * FROM part_categories order by part_category_id;";
 
   pool.query(categoryTableQuery, (error, result) => {
     if (error) {
@@ -40,7 +40,7 @@ categoriesRouter.post("/edit", async (req, res) => {
     var duplicateResult = await pool.query(checkForDuplicates);
 
     if (duplicateResult.rows.length >= 1) {
-      var returnQuery = `SELECT * from part_categories`;
+      var returnQuery = `SELECT * FROM part_categories order by part_category_id;`;
       let resultRet = await pool.query(returnQuery);
 
       let resultsRet = {
@@ -52,7 +52,7 @@ categoriesRouter.post("/edit", async (req, res) => {
     }
 
     await pool.query(editPartCategoryTableQuery);
-    var resultRet = await pool.query(`SELECT * from part_categories`);
+    var resultRet = await pool.query(`SELECT * FROM part_categories order by part_category_id;`);
 
     let resultsRet = { rows: resultRet.rows, canEdit: true };
     return res.status(200).json(resultsRet);
@@ -72,7 +72,7 @@ categoriesRouter.post("/add", async (req, res) => {
   try {
     var duplicateResult = await pool.query(checkForDuplicates);
     if (duplicateResult.rows.length >= 1) {
-      var returnQuery = `SELECT * from part_categories`;
+      var returnQuery = `SELECT * FROM part_categories order by part_category_id;`;
       let resultRet = await pool.query(returnQuery);
 
       let resultsRet = {
@@ -85,7 +85,7 @@ categoriesRouter.post("/add", async (req, res) => {
     // Query to add part category into table
     await pool.query(addPartCategoryTableQuery);
 
-    let results = await pool.query(`SELECT * FROM part_categories`);
+    let results = await pool.query(`SELECT * FROM part_categories order by part_category_id;`);
     let resultsRet = { rows: results.rows, canAdd: true };
     return res.status(200).json(resultsRet);
   } catch (e) {
@@ -105,14 +105,14 @@ categoriesRouter.post("/delete", async (req, res) => {
   try {
     var partInUse = await pool.query(checkIfInUse);
     if (partInUse.rows.length >= 1) {
-      var results = await pool.query(`SELECT * FROM part_categories`);
+      var results = await pool.query(`SELECT * FROM part_categories order by part_category_id;`);
       let resultsRet = { rows: results.rows, canDelete: false };
       return res.status(200).json(resultsRet);
     }
 
     await pool.query(deletePartCategoryTableQuery);
 
-    var results = await pool.query(`SELECT * FROM part_categories`);
+    var results = await pool.query(`SELECT * FROM part_categories order by part_category_id;`);
     let resultsRet = { rows: results.rows, canDelete: true };
     return res.status(200).json(resultsRet);
   } catch (e) {
