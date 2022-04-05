@@ -71,10 +71,11 @@ app.use("/api/people", peopleRouter);
 // routes for wip table to be used in inventory
 app.use("/api/wip", wipRouter);
 
+// routes used for getting the logs
+app.use("/api/logs", logsRouter);
+
 // routes used for testing
 app.use("/api/testing", testingRouter);
-
-app.use("/api/logs", logsRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
