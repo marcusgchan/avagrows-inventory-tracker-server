@@ -15,6 +15,7 @@ const peopleRouter = require("./routes/peopleRouter");
 const wipRouter = require("./routes/wipRouter");
 const testingRouter = require("./routes/testingRouter");
 const logsRouter = require("./routes/logsRouter");
+const calibrateTotalQuantityRouter = require("./routes/calibrateTotalQuantityRouter");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -43,6 +44,8 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
 require("./passportConfig")(passport);
+
+// --- Routes Used By The Front End ---
 
 // routes related to logging in
 app.use("/api/register", registerRouter);
@@ -74,8 +77,13 @@ app.use("/api/wip", wipRouter);
 // routes used for getting the logs
 app.use("/api/logs", logsRouter);
 
+// --- Routes Not Used By The Front End ---
+
 // routes used for testing
 app.use("/api/testing", testingRouter);
+
+// route that calibrates the total quantity if it was manually changed in the back end
+app.use("/api/calibrate", calibrateTotalQuantityRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
