@@ -71,7 +71,7 @@ inventoryRouter.post("/changeQuantity", async (req, res) => {
     await pool.query(eventQuery);
 
     let rowResults = await pool.query(
-      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
     );
     res.status(200).json(rowResults.rows);
   } catch (e) {
@@ -94,7 +94,7 @@ inventoryRouter.post("/delete", async (req, res) => {
     const result = await pool.query(partsQuantityQuery);
     if (result.rows.length === 0) {
       let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
 
       let result = { rows: rowResults.rows, deletePossible: false };
@@ -134,7 +134,7 @@ inventoryRouter.post("/delete", async (req, res) => {
     await pool.query(eventQuery);
 
     let rowResults = await pool.query(
-      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
     );
     res.status(200).json(rowResults.rows);
   } catch (e) {
@@ -208,7 +208,7 @@ inventoryRouter.post("/addParts", async (req, res) => {
       await pool.query(eventQuery);
 
       let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
 
       res.status(200).json(rowResults.rows);
@@ -296,7 +296,7 @@ inventoryRouter.post("/moveLocation", async (req, res) => {
       let eventQuery = `insert into relocation_events values(${log_id.rows[0].log_id},3,${moveAmount},${location_id},${new_location_id},${status_id},${new_status_id},'${internal_part_number}');`;
       await pool.query(eventQuery);
       let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
       res.status(200).json(rowResults.rows);
     }
@@ -339,7 +339,7 @@ inventoryRouter.post("/convert", async (req, res) => {
     );
     if (part_quantity_quantity2_res.rows.length === 0) {
       let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
 
       let result = { rows: rowResults.rows, convertPossible: false };
@@ -354,7 +354,7 @@ inventoryRouter.post("/convert", async (req, res) => {
 
       if (part_quantity_res.rows.length === 0) {
         let rowResults = await pool.query(
-          `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+          `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
         );
 
         let result = { rows: rowResults.rows, convertPossible: false };
@@ -364,7 +364,7 @@ inventoryRouter.post("/convert", async (req, res) => {
         array[i].wip_part_quantity_needed * conversionQuantity
       ) {
         let rowResults = await pool.query(
-          `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+          `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
         );
 
         let result = { rows: rowResults.rows, convertPossible: false };
@@ -447,7 +447,7 @@ inventoryRouter.post("/convert", async (req, res) => {
     await pool.query(eventQuery);
 
     let rowResults = await pool.query(
-      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
     );
 
     let result = { rows: rowResults.rows, convertPossible: true };
@@ -492,7 +492,7 @@ inventoryRouter.post("/unconvert", async (req, res) => {
     );
     if (part_quantity_quantity_res.rows.length === 0) {
       let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
 
       let result = { rows: rowResults.rows, unconvertPossible: false };
@@ -502,7 +502,7 @@ inventoryRouter.post("/unconvert", async (req, res) => {
     //check to see if enough quantity to convert
     if (quantity - 1 * conversionQuantity < 0) {
       let rowResults = await pool.query(
-        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+        `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
       );
       let result = { rows: rowResults.rows, unconvertPossible: false };
       return res.status(200).json(result);
@@ -591,7 +591,7 @@ inventoryRouter.post("/unconvert", async (req, res) => {
     await pool.query(eventQuery);
 
     let rowResults = await pool.query(
-      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.internal_part_number = part_categories.part_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
+      `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id;`
     );
 
     let result = { rows: rowResults.rows, unconvertPossible: true };
