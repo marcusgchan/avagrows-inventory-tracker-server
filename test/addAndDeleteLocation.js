@@ -17,7 +17,7 @@ describe("location_add_remove", function () {
           .request(server)
           .post("/api/locations/add")
           .send({
-            location_name: "test",
+            location_name: "test2",
             address: "test",
             postal_code: "test",
           })
