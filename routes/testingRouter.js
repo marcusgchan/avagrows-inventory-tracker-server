@@ -95,7 +95,7 @@ testingRouter.get("/queryForEditLocation", (req, res) => {
 testingRouter.get("/queryForEditPartCategoryRouter", (req, res) => {
   //select all parts from part quantity table
   var queryPartsQuery =
-    "SELECT * FROM part_categories where part_id = 'MTL0139'";
+    "SELECT * FROM part_categories where part_category_id = (select max(part_category_id) from part_categories);";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {
@@ -139,7 +139,7 @@ testingRouter.get("/queryForEditStatusRouter", (req, res) => {
 testingRouter.get("/queryForConversionQuantity", (req, res) => {
   //select all parts from part quantity table
   var queryPartsQuery =
-    "SELECT * FROM part_quantity where internal_part_number = 'BYTE'and location_id = 2 and status_id=2 or internal_part_number = 'LIGHTSTAND'and location_id = 2 and status_id=2 or internal_part_number = 'PUMPHOUSING' and location_id = 2 and status_id=2 or internal_part_number = 'WATERTANK' and location_id = 2 and status_id=2 or internal_part_number = 'PACKAGING' and location_id = 2 and status_id=2;";
+    "SELECT * FROM part_quantity where internal_part_number = 'BYTE'and location_id = 2 and status_id=2 or internal_part_number = 'LIGHTSTAND'and location_id = 2 and status_id=2 or internal_part_number = 'PUMPHOUSING' and location_id = 2 and status_id=2 or internal_part_number = 'WATERTANK' and location_id = 2 and status_id=2 or internal_part_number = 'PACKAGING' and location_id = 2 and status_id=2 order by internal_part_number;";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {
@@ -154,7 +154,7 @@ testingRouter.get("/queryForConversionQuantity", (req, res) => {
 testingRouter.get("/queryForConversionTotalQuantity", (req, res) => {
   //select all parts from part quantity table
   var queryPartsQuery =
-    "SELECT * FROM parts where internal_part_number = 'BYTE' or internal_part_number = 'LIGHTSTAND' or internal_part_number = 'PUMPHOUSING' or internal_part_number = 'WATERTANK' or internal_part_number = 'PACKAGING' ;";
+    "SELECT * FROM parts where internal_part_number = 'BYTE' or internal_part_number = 'LIGHTSTAND' or internal_part_number = 'PUMPHOUSING' or internal_part_number = 'WATERTANK' or internal_part_number = 'PACKAGING' order by internal_part_number;";
 
   pool.query(queryPartsQuery, (error, result) => {
     if (error) {
@@ -288,6 +288,19 @@ testingRouter.get("/queryPartsQuantityRouter", (req, res) => {
     var results = result.rows;
     res.json(results);
 
+  });
+});
+testingRouter.get("/queryForCategoryID", (req, res) => {
+  //select all events from relocation events table.
+  var queryForEventQuantityQuery = "select max(part_category_id) from part_categories;";
+
+  pool.query(queryForEventQuantityQuery, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(200).end();
+    }
+    var results = result.rows[0].max;
+    res.json(results);
   });
 });
 

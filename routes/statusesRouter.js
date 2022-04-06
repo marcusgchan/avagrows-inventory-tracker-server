@@ -2,7 +2,7 @@ const statusRouter = require("express").Router();
 const pool = require("../db");
 
 statusRouter.get("/", (req, res) => {
-  var statusTableQuery = "SELECT * FROM statuses;";
+  var statusTableQuery = "SELECT * FROM statuses order by status_id;";
 
   pool.query(statusTableQuery, (error, result) => {
     if (error) {
@@ -26,7 +26,7 @@ statusRouter.post("/add", async (req, res) => {
   try {
     var result = await pool.query(checkStatusTableQuery);
     if (result.rows.length >= 1) {
-      var returnQuery = `SELECT * from statuses;`
+      var returnQuery = `SELECT * FROM statuses order by status_id;`
       var resultRet = await pool.query(returnQuery)
 
       let resultsRet = { rows: resultRet.rows, canAdd: false };
@@ -38,7 +38,7 @@ statusRouter.post("/add", async (req, res) => {
 
     await pool.query(addStatusTableQuery)
 
-    var returnQuery = `SELECT * from statuses;`
+    var returnQuery = `SELECT * FROM statuses order by status_id;`
     var resultFromReturnQuery = await pool.query(returnQuery)
     let results = { rows: resultFromReturnQuery.rows, canAdd: true };
     return res.status(200).json(results);
@@ -58,7 +58,7 @@ statusRouter.post("/edit", async (req, res) => {
     if (checkResult.rows.length == 0) {
       var result = await pool.query(checkStatusTableQuery);
       if (result.rows.length >= 1) {
-        var returnQuery = `SELECT * from statuses;`
+        var returnQuery = `SELECT * FROM statuses order by status_id;`
         var resultRet = await pool.query(returnQuery)
 
         let resultsRet = { rows: resultRet.rows, canEdit: false };
@@ -68,7 +68,7 @@ statusRouter.post("/edit", async (req, res) => {
         var addStatusTableQuery = `UPDATE statuses SET status_name = '${status_name}',note='${note}' WHERE status_id = ${status_id};`;
 
         await pool.query(addStatusTableQuery);
-        var returnQuery = `SELECT * from statuses;`
+        var returnQuery = `SELECT * FROM statuses order by status_id;`
         var resultRet = await pool.query(returnQuery)
 
         let resultsRet = { rows: resultRet.rows, canEdit: true };
@@ -81,7 +81,7 @@ statusRouter.post("/edit", async (req, res) => {
     var addStatusTableQuery = `UPDATE statuses SET status_name = '${status_name}',note='${note}' WHERE status_id = ${status_id};`;
 
     await pool.query(addStatusTableQuery);
-    var returnQuery = `SELECT * from statuses;`
+    var returnQuery = `SELECT * FROM statuses order by status_id;`
     var resultRet = await pool.query(returnQuery)
 
     let resultsRet = { rows: resultRet.rows, canEdit: true };
@@ -107,7 +107,7 @@ statusRouter.post("/delete", async (req, res) => {
     partsQuantityRows = result.rows;
     if (partsQuantityRows.length > 0) {
 
-      var returnQuery = `SELECT * from statuses;`
+      var returnQuery = `SELECT * FROM statuses order by status_id;`
       var resultRet = await pool.query(returnQuery)
 
       let resultsRet = { rows: resultRet.rows, canDelete: false };
@@ -118,7 +118,7 @@ statusRouter.post("/delete", async (req, res) => {
     var addStatusTableQuery = `DELETE FROM statuses WHERE status_id = ${status_id};`;
 
     await pool.query(addStatusTableQuery);
-    var returnQuery = `SELECT * from statuses;`
+    var returnQuery = `SELECT * FROM statuses order by status_id;`
     var resultRet = await pool.query(returnQuery)
 
     let resultsRet = { rows: resultRet.rows, canDelete: true };

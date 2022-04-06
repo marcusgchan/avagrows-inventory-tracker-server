@@ -17,7 +17,7 @@ describe("statuses_add_remove", function () {
           .request(server)
           .post("/api/statuses/add")
           .send({
-            status_name: "test",
+            status_name: "test2",
             note: "test",
           })
           .end(function (error, res) {

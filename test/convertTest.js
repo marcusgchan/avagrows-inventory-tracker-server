@@ -19,7 +19,7 @@ describe("convert_parts", function () {
           .request(server)
           .get("/api/testing/queryForConversionTotalQuantity")
           .end(function (err, res) {
-            console.log("hi");
+            //console.log("hi");
             var numTotal = res.body;
             chai
               .request(server)
@@ -30,7 +30,8 @@ describe("convert_parts", function () {
                 user_id:1,
               })
               .end(function (error, res) {
-                res.body.convertPossible.should.equal(true);
+                
+                (res.body.convertPossible).should.equal(true);
                 chai
                   .request(server)
                   .get("/api/testing/queryForConversionQuantity")
