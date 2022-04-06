@@ -241,6 +241,11 @@ inventoryRouter.post("/moveLocation", async (req, res) => {
   let moveAmount = old_quantity - new_quantity;
 
   try {
+    var new_location_name = await pool.query(`select location_name from locations where location_id=${new_location_id};`)
+    var old_location_name = await pool.query(`select location_name from locations where location_id=${location_id};`)
+    var new_status_name = await pool.query(`select status_name from statuses where status_id=${new_status_id};`)
+    var old_status_name = await pool.query(`select status_name from statuses where status_id=${status_id};`) 
+    
     //check if there is quantity available to be moved
     if (old_quantity - moveAmount < 0) {
       res
@@ -293,7 +298,7 @@ inventoryRouter.post("/moveLocation", async (req, res) => {
       today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
       let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',3,'${today}','','Relocated Part') returning log_id;`;
       let log_id = await pool.query(loggingQuery);
-      let eventQuery = `insert into relocation_events values(${log_id.rows[0].log_id},3,${moveAmount},${location_id},${new_location_id},${status_id},${new_status_id},'${internal_part_number}');`;
+      let eventQuery = `insert into relocation_events values(${log_id.rows[0].log_id},3,${moveAmount},'${old_location_name.rows[0].location_name}','${new_location_name.rows[0].location_name}','${old_status_name.rows[0].status_name}','${new_status_name.rows[0].status_name}','${internal_part_number}');`;
       await pool.query(eventQuery);
       let rowResults = await pool.query(
         `SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id order by internal_part_number;`
