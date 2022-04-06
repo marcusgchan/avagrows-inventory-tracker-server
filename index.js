@@ -15,6 +15,7 @@ const peopleRouter = require("./routes/peopleRouter");
 const wipRouter = require("./routes/wipRouter");
 const testingRouter = require("./routes/testingRouter");
 const logsRouter = require("./routes/logsRouter");
+const dashboardRouter = require("./routes/dashboardRouter");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -49,6 +50,8 @@ app.use("/api/register", registerRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/logout", logoutRouter);
+
+app.use("/api/dashboard", dashboardRouter);
 
 // routes related to the inventory table on front end
 app.use("/api/inventory", inventoryRouter);
