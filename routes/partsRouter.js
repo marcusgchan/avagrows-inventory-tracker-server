@@ -1,6 +1,7 @@
 const partsRouter = require("express").Router();
 const res = require("express/lib/response");
 const pool = require("../db");
+const authenticate = require("../authenticate");
 
 // a function that gets the corresponding category id from a category name
 // returns 0 if no id exits for a name
@@ -20,7 +21,7 @@ async function getCategoryID(name) {
   }
 }
 
-partsRouter.get("/", (req, res) => {
+partsRouter.get("/", authenticate, (req, res) => {
   var partsTableQuery =
     "SELECT * FROM parts INNER JOIN part_categories on parts.category_id = part_categories.part_category_id order by internal_part_number;";
 
@@ -35,7 +36,7 @@ partsRouter.get("/", (req, res) => {
 });
 
 //add part to parts table
-partsRouter.post("/add", async (req, res) => {
+partsRouter.post("/add", authenticate, async (req, res) => {
   let {
     internal_part_number,
     part_name,
@@ -102,7 +103,7 @@ partsRouter.post("/add", async (req, res) => {
   }
 });
 
-partsRouter.post("/delete", async (req, res) => {
+partsRouter.post("/delete", authenticate, async (req, res) => {
   var internal_part_number = req.body.internal_part_number;
   try {
     var partsQuantityQuery = `SELECT * FROM part_quantity where internal_part_number = '${internal_part_number}';`;
@@ -139,7 +140,7 @@ partsRouter.post("/delete", async (req, res) => {
   }
 });
 
-partsRouter.post("/edit", async (req, res) => {
+partsRouter.post("/edit", authenticate, async (req, res) => {
   let {
     internal_part_number,
     part_name,
@@ -192,7 +193,7 @@ partsRouter.post("/edit", async (req, res) => {
   }
 });
 
-partsRouter.post("/checkPartExists", async (req, res) => {
+partsRouter.post("/checkPartExists", authenticate, async (req, res) => {
   let partNumber = req.body.partNumber;
 
   try {

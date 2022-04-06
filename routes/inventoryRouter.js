@@ -1,8 +1,9 @@
 const inventoryRouter = require("express").Router();
 const pool = require("../db");
+const authenticate = require("../authenticate");
 
 //gets all the rows for the inventory table
-inventoryRouter.get("/", (req, res) => {
+inventoryRouter.get("/", authenticate, (req, res) => {
   var rowsTableQuery =
     "SELECT parts.internal_part_number, parts.part_name, locations.location_name, part_categories.part_category_name, statuses.status_name, part_quantity.quantity, part_quantity.serial, parts.total_quantity FROM parts INNER JOIN part_quantity ON parts.internal_part_number = part_quantity.internal_part_number INNER JOIN locations ON part_quantity.location_id = locations.location_id INNER JOIN part_categories ON parts.category_id = part_categories.part_category_id INNER JOIN statuses ON part_quantity.status_id = statuses.status_id order by internal_part_number, serial;";
   pool.query(rowsTableQuery, (error, result) => {
@@ -15,7 +16,7 @@ inventoryRouter.get("/", (req, res) => {
 });
 
 // change quantity of a row (part at a specific location and specific status) in the inventory table
-inventoryRouter.post("/changeQuantity", async (req, res) => {
+inventoryRouter.post("/changeQuantity", authenticate, async (req, res) => {
   let {
     old_quantity,
     new_quantity,
@@ -81,7 +82,7 @@ inventoryRouter.post("/changeQuantity", async (req, res) => {
 });
 
 // deltes a row (part at a specific location and specific status) in the inventory table
-inventoryRouter.post("/delete", async (req, res) => {
+inventoryRouter.post("/delete", authenticate, async (req, res) => {
   const { internal_part_number, location_id, status_id, user_id } = req.body;
 
   var deleteFromAllTables = `DELETE FROM part_quantity WHERE internal_part_number = '${internal_part_number}' AND location_id = '${location_id}' AND status_id = '${status_id}'`;
@@ -145,7 +146,7 @@ inventoryRouter.post("/delete", async (req, res) => {
 
 //add part (creates a row with a unique combination of internal_part_number, status_id,
 //and location_id to the table) to part quantity table
-inventoryRouter.post("/addParts", async (req, res) => {
+inventoryRouter.post("/addParts", authenticate, async (req, res) => {
   let {
     internal_part_number,
     location_id,
@@ -224,7 +225,7 @@ inventoryRouter.post("/addParts", async (req, res) => {
 });
 
 // change location and/or status of a part in part_quantity table
-inventoryRouter.post("/moveLocation", async (req, res) => {
+inventoryRouter.post("/moveLocation", authenticate, async (req, res) => {
   let {
     internal_part_number,
     location_id,
@@ -241,11 +242,19 @@ inventoryRouter.post("/moveLocation", async (req, res) => {
   let moveAmount = old_quantity - new_quantity;
 
   try {
-    var new_location_name = await pool.query(`select location_name from locations where location_id=${new_location_id};`)
-    var old_location_name = await pool.query(`select location_name from locations where location_id=${location_id};`)
-    var new_status_name = await pool.query(`select status_name from statuses where status_id=${new_status_id};`)
-    var old_status_name = await pool.query(`select status_name from statuses where status_id=${status_id};`) 
-    
+    var new_location_name = await pool.query(
+      `select location_name from locations where location_id=${new_location_id};`
+    );
+    var old_location_name = await pool.query(
+      `select location_name from locations where location_id=${location_id};`
+    );
+    var new_status_name = await pool.query(
+      `select status_name from statuses where status_id=${new_status_id};`
+    );
+    var old_status_name = await pool.query(
+      `select status_name from statuses where status_id=${status_id};`
+    );
+
     //check if there is quantity available to be moved
     if (old_quantity - moveAmount < 0) {
       res
@@ -311,7 +320,7 @@ inventoryRouter.post("/moveLocation", async (req, res) => {
 });
 
 // router for converting raw materials or wip parts into wip parts or finished goods
-inventoryRouter.post("/convert", async (req, res) => {
+inventoryRouter.post("/convert", authenticate, async (req, res) => {
   let array = [];
   let location_id = 0;
   let final_location_id = 0;
@@ -463,7 +472,7 @@ inventoryRouter.post("/convert", async (req, res) => {
 });
 
 // router for unconverting a wip part or an finished good into its base parts
-inventoryRouter.post("/unconvert", async (req, res) => {
+inventoryRouter.post("/unconvert", authenticate, async (req, res) => {
   let array = [];
   let location_id = 0;
   let final_location_id = 0;

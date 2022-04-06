@@ -1,7 +1,8 @@
 const peopleRouter = require("express").Router();
 const pool = require("../db");
+const authenticate = require("../authenticate");
 
-peopleRouter.get("/", (req, res) => {
+peopleRouter.get("/", authenticate, (req, res) => {
   var peopleTableQuery = "SELECT * FROM people order by user_id;";
 
   pool.query(peopleTableQuery, (error, result) => {
@@ -14,7 +15,7 @@ peopleRouter.get("/", (req, res) => {
   });
 });
 
-peopleRouter.post("/add", async (req, res) => {
+peopleRouter.post("/add", authenticate, async (req, res) => {
   try {
     var name = req.body.name;
     var checkForNameQuery = `select * from people where name = '${name}';`;
@@ -41,7 +42,7 @@ peopleRouter.post("/add", async (req, res) => {
   }
 });
 
-peopleRouter.post("/edit", async (req, res) => {
+peopleRouter.post("/edit", authenticate, async (req, res) => {
   var user_id = req.body.user_id;
 
   var name = req.body.name;
@@ -82,7 +83,7 @@ peopleRouter.post("/edit", async (req, res) => {
   }
 });
 
-peopleRouter.post("/delete", async (req, res) => {
+peopleRouter.post("/delete", authenticate, async (req, res) => {
   try {
     var user_id = req.body.user_id;
     var logQuery = `select * from logs where user_id = ${user_id};`;

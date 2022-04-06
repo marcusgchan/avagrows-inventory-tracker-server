@@ -1,8 +1,9 @@
 const wipRouter = require("express").Router();
 const { json } = require("express/lib/response");
 const pool = require("../db");
+const authenticate = require("../authenticate");
 
-wipRouter.get("/", (req, res) => {
+wipRouter.get("/", authenticate, (req, res) => {
   var wipTableQuery = "SELECT * FROM wip;";
 
   pool.query(wipTableQuery, (error, result) => {

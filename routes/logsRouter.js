@@ -1,8 +1,9 @@
 const logsRouter = require("express").Router();
 const pool = require("../db");
+const authenticate = require("../authenticate");
 
 //gets all the rows for the inventory table
-logsRouter.get("/", async (req, res) => {
+logsRouter.get("/", authenticate, async (req, res) => {
   var rowsTableQuery0 =
     "SELECT logs.log_id, logs.event_type_name, logs.part_id, quantity_change_events.quantity_changed, '' AS old_location, '' AS new_location, '' AS old_status, '' AS new_status, logs.date_time, people.name FROM logs INNER JOIN quantity_change_events ON logs.log_id = quantity_change_events.log_id INNER JOIN people ON logs.user_id = people.user_id;";
   var rowsTableQuery1 =
