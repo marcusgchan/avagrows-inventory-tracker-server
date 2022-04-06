@@ -15,11 +15,8 @@ const peopleRouter = require("./routes/peopleRouter");
 const wipRouter = require("./routes/wipRouter");
 const testingRouter = require("./routes/testingRouter");
 const logsRouter = require("./routes/logsRouter");
-<<<<<<< HEAD
 const dashboardRouter = require("./routes/dashboardRouter");
-=======
 const calibrateTotalQuantityRouter = require("./routes/calibrateTotalQuantityRouter");
->>>>>>> 8cf9c28a5960e8016ba860b31730b36256d8c96b
 
 const app = express();
 const PORT = process.env.PORT;
