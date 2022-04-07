@@ -47,9 +47,8 @@ categoriesRouter.post("/edit", authenticate, async (req, res) => {
 
       let resultsRet = {
         rows: resultRet.rows,
-        canAdd: false,
+        canEdit: false,
       };
-
       return res.status(200).json(resultsRet);
     }
 
@@ -83,7 +82,6 @@ categoriesRouter.post("/add", authenticate, async (req, res) => {
         rows: resultRet.rows,
         canAdd: false,
       };
-
       return res.status(200).json(resultsRet);
     }
     // Query to add part category into table
