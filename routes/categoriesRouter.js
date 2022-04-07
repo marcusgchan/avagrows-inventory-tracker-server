@@ -38,18 +38,22 @@ categoriesRouter.post("/edit", authenticate, async (req, res) => {
     let { part_category_id, part_category_name } = req.body;
     var editPartCategoryTableQuery = `UPDATE part_categories SET part_category_name = '${part_category_name}' WHERE part_category_id = '${part_category_id}';`;
     var checkForDuplicates = `SELECT * FROM part_categories WHERE part_category_name = '${part_category_name}';`;
+    var isEntryQuery = `select * from part_categories where part_category_id=${part_category_id} and part_category_name = '${part_category_name}';`;
+    var returnQuery = `SELECT * FROM part_categories order by part_category_id;`;
 
-    var duplicateResult = await pool.query(checkForDuplicates);
+    var isEntryRes = await pool.query(isEntryQuery);
+    if (isEntryRes.rows.length == 0) {
+      var result = await pool.query(checkForDuplicates);
 
-    if (duplicateResult.rows.length >= 1) {
-      var returnQuery = `SELECT * FROM part_categories order by part_category_id;`;
-      let resultRet = await pool.query(returnQuery);
+      if (result.rows.length >= 1) {
+        let resultRet = await pool.query(returnQuery);
 
-      let resultsRet = {
-        rows: resultRet.rows,
-        canEdit: false,
-      };
-      return res.status(200).json(resultsRet);
+        let resultsRet = {
+          rows: resultRet.rows,
+          canEdit: false,
+        };
+        return res.status(200).json(resultsRet);
+      }
     }
 
     await pool.query(editPartCategoryTableQuery);
@@ -58,6 +62,7 @@ categoriesRouter.post("/edit", authenticate, async (req, res) => {
     );
 
     let resultsRet = { rows: resultRet.rows, canEdit: true };
+
     return res.status(200).json(resultsRet);
   } catch (e) {
     return res.status(400).send(e);
