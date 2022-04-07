@@ -83,7 +83,8 @@ app.use("/api/logs", logsRouter);
 // --- Routes Not Used By The Front End ---
 
 // routes used for testing
-app.use("/api/testing", testingRouter);
+// testing route is commented out as it does not take into account authentication
+// app.use("/api/testing", testingRouter);
 
 // route that calibrates the total quantity if it was manually changed in the back end
 app.use("/api/calibrate", calibrateTotalQuantityRouter);
