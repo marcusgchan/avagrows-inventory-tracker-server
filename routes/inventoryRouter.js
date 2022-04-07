@@ -49,19 +49,7 @@ inventoryRouter.post("/changeQuantity", authenticate, async (req, res) => {
     await pool.query(changeTotalQuantityTableQuery);
 
     // Generates a log.
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
-    var hours = today.getHours();
-    var minutes = today.getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-
-    today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
+    let today = new Date().toISOString();
 
     let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',1,'${today}','','Quantity changed') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
@@ -114,19 +102,7 @@ inventoryRouter.post("/delete", authenticate, async (req, res) => {
     await pool.query(addNewPartTotalQuantity);
 
     // Generates a log.
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
-    var hours = today.getHours();
-    var minutes = today.getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-
-    today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
+    let today = new Date().toISOString();
 
     let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',5,'${today}','','Deleted Part') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
@@ -188,19 +164,7 @@ inventoryRouter.post("/addParts", authenticate, async (req, res) => {
       await pool.query(addNewPartTotalQuantity);
 
       // Generates a log.
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
-      var hours = today.getHours();
-      var minutes = today.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      var strTime = hours + ":" + minutes + " " + ampm;
-
-      today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
+      let today = new Date().toISOString();
 
       let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',4,'${today}','','Added Part') returning log_id;`;
       let log_id = await pool.query(loggingQuery);
@@ -292,19 +256,8 @@ inventoryRouter.post("/moveLocation", authenticate, async (req, res) => {
       }
 
       // Generates a log.
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
-      var hours = today.getHours();
-      var minutes = today.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      var strTime = hours + ":" + minutes + " " + ampm;
+      let today = new Date().toISOString();
 
-      today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
       let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}',3,'${today}','','Relocated Part') returning log_id;`;
       let log_id = await pool.query(loggingQuery);
       let eventQuery = `insert into relocation_events values(${log_id.rows[0].log_id},3,${moveAmount},'${old_location_name.rows[0].location_name}','${new_location_name.rows[0].location_name}','${old_status_name.rows[0].status_name}','${new_status_name.rows[0].status_name}','${internal_part_number}');`;
@@ -440,19 +393,7 @@ inventoryRouter.post("/convert", authenticate, async (req, res) => {
     await pool.query(ConvertPartsRouterQuery7);
 
     // Generates a log.
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
-    var hours = today.getHours();
-    var minutes = today.getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-
-    today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
+    let today = new Date().toISOString();
 
     let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}', 2 ,'${today}','','Convert') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
@@ -584,19 +525,7 @@ inventoryRouter.post("/unconvert", authenticate, async (req, res) => {
     await pool.query(ConvertPartsRouterQuery7);
 
     // Generates a log.
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
-    var hours = today.getHours();
-    var minutes = today.getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-
-    today = mm + "/" + dd + "/" + yyyy + "/" + strTime;
+    let today = new Date().toISOString();
 
     let loggingQuery = `insert into logs values( nextval('logs_log_id_seq'),${user_id},'${internal_part_number}', 2 ,'${today}','','Unconvert') returning log_id;`;
     let log_id = await pool.query(loggingQuery);
